@@ -1,0 +1,15 @@
+:root{color-scheme:dark;--font-size:24px;--emote-size:36px;--row-gap:9px;--chat-shadow:0 1px 2px #000,0 0 3px #000}
+*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;background:transparent!important;overflow:hidden}
+body{font-family:Inter,"Segoe UI",Arial,sans-serif;color:#fff;font-size:var(--font-size);font-weight:700;text-shadow:var(--chat-shadow)}
+#chat{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;gap:var(--row-gap);padding:12px 16px;overflow:hidden}
+.message{flex:none;line-height:1.6;overflow-wrap:anywhere;animation:message-in .18s ease-out;white-space:pre-wrap}
+.message .badge{width:auto;min-width:.86em;max-width:3em;height:.86em;vertical-align:-.04em;margin-right:5px;object-fit:contain;text-shadow:none;border-radius:2px}
+.username{font-weight:800}.username::after{content:": ";color:#fff}.message.action .username::after{content:" "}
+.message-text{display:inline}.emote-unit{display:inline-block;position:relative;vertical-align:middle;line-height:0;margin:0 2px;text-shadow:none;white-space:normal}
+.emote-stack{position:relative;display:block;line-height:0}.emote-image{display:block;object-fit:fill;max-width:none}
+.emote-base{width:100%;height:100%}.emote-zero{position:absolute;bottom:0;left:50%;transform:translateX(-50%)}
+.emote-fallback{font-size:var(--font-size);line-height:1.4;text-shadow:var(--chat-shadow)}
+.message.preview .username{color:#b8a1ff}.message.preview .username::before{content:"PREVIEW · ";font-size:.62em;letter-spacing:.08em;color:#b5b5c1}
+#status{position:absolute;top:8px;left:8px;right:8px;font:12px/1.4 monospace;color:#fff;background:#1b1b25e8;padding:8px;border-radius:6px;text-shadow:none;z-index:10}
+.message.expired{opacity:0;transition:opacity .4s}
+@keyframes message-in{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}

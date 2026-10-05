@@ -1,0 +1,7 @@
+node_modules/
+*.log
+test-results/
+research/snapshots/
+.DS_Store
+Thumbs.db
+*.zip
