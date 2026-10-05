@@ -51,13 +51,17 @@ async function check(name,fn){try{await fn();results.push({name,passed:true});}c
     });
     for(const entry of result)assert.ok(entry.animation!=='none'||entry.filter!=='none'||entry.slide,entry.name);
   });
-  await check('animation transforms and filters actually change with browser time',async()=>{
+  await check('animation transforms and filters change across their timelines',async()=>{
     const values=await page.evaluate(async()=>{
       const row=OverlayRenderer.render({text:'heyy ffzBounce heyy ffzSpin heyy ffzRainbow heyy ffzSlide'},testCatalog,{names:false});document.getElementById('chat').append(row);
       const units=[...row.querySelectorAll('.emote-unit')];
       const nodes=[units[0].querySelector('.ffz-motion-bounce'),units[1].querySelector('.ffz-motion-spin'),units[2].querySelector('.ffz-effect-stage'),units[3].querySelector('.ffz-slide-strip')];
+      const animations=nodes.map(node=>node.getAnimations()[0]);
+      for(const animation of animations){animation.pause();animation.currentTime=0;}
       const sample=()=>nodes.map(n=>({transform:getComputedStyle(n).transform,filter:getComputedStyle(n).filter}));
-      const before=sample();await new Promise(resolve=>setTimeout(resolve,123));return {before,after:sample()};
+      await new Promise(resolve=>requestAnimationFrame(resolve));const before=sample();
+      for(const animation of animations)animation.currentTime=123;
+      await new Promise(resolve=>requestAnimationFrame(resolve));return {before,after:sample()};
     });
     assert.notEqual(values.before[0].transform,values.after[0].transform,'bounce must move');
     assert.notEqual(values.before[1].transform,values.after[1].transform,'spin must rotate');
