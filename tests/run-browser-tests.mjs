@@ -26,6 +26,7 @@ function run(file,extraEnv={}){
 try{
   await ready();
   await run('tests/browser-smoke.cjs');
+  await run('tests/setup-controls.cjs',{OVERLAY_TEST_PORT:String(port)});
   await run('tests/filename-channel.cjs');
   await run('tests/stacking-regression.cjs');
   await run('tests/layout-regression.cjs',{OVERLAY_TEST_URL:base+'/overlay.html?channel=test_channel&offline=1&test=1'});
