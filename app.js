@@ -4,7 +4,8 @@
   const qs=new URLSearchParams(location.search || location.hash.replace(/^#/, '?'));
   const config={...defaults,...(globalThis.OVERLAY_CONFIG||{})};
   const numeric=(key,min,max)=>{const n=Number(qs.get(key)??config[key]);config[key]=Number.isFinite(n)?Math.min(max,Math.max(min,n)):defaults[key];};
-  const fileChannel=location.protocol==='file:'?decodeURIComponent(location.pathname.split('/').pop()||'').match(/^chat-([a-z0-9_]{1,25})(?:-preview)?\.html$/i)?.[1]:'';
+  const isLocalDocument=location.protocol==='file:'||(location.protocol==='http:'&&location.hostname==='absolute');
+  const fileChannel=isLocalDocument?decodeURIComponent(location.pathname.split('/').pop()||'').match(/^chat-([a-z0-9_]{1,25})(?:-preview)?\.html$/i)?.[1]:'';
   config.channel=(qs.get('channel')||fileChannel||config.channel).trim().replace(/^#/, '').toLowerCase();
   for(const key of ['demo','badges','names','paints'])if(qs.has(key))config[key]=!['0','false','off'].includes(qs.get(key));
   numeric('fontSize',12,72);numeric('emoteSize',16,128);numeric('maxMessages',1,100);numeric('fade',0,3600);

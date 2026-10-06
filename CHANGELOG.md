@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.6 — 2026-10-06
+
+- Read renamed channels from OBS Browser Source's internal `http://absolute/...` local-file address as well as a normal `file://` address.
+- Add a browser regression test for OBS's local-file address format.
+
 ## 0.2.5 — 2026-10-06
 
 - Use one standalone download for both preview and live chat.

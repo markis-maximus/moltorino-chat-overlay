@@ -10,9 +10,14 @@ const root=path.resolve(__dirname,'..'),out=path.join(root,'test-results','chat-
  try{
   const page=await browser.newPage();
   await page.goto(pathToFileURL(out).href+'?offline=1');
-  const state=await page.evaluate(()=>OverlayApp.getStatus());
-  assert.equal(state.channel,'my_channel');
-  assert.equal(state.version,'0.2.5');
-  console.log('Renamed standalone file selected channel:',state.channel);
+  const fileState=await page.evaluate(()=>OverlayApp.getStatus());
+  assert.equal(fileState.channel,'my_channel');
+  assert.equal(fileState.version,'0.2.6');
+  const html=fs.readFileSync(path.join(root,'dist','chat-channelname.html'),'utf8');
+  await page.route('http://absolute/**',route=>route.fulfill({contentType:'text/html',body:html}));
+  await page.goto('http://absolute/D:/Downloads/chat-obs_channel.html?offline=1');
+  const obsState=await page.evaluate(()=>OverlayApp.getStatus());
+  assert.equal(obsState.channel,'obs_channel');
+  console.log('Renamed standalone channels:',{file:fileState.channel,obs:obsState.channel});
  }finally{await browser.close();fs.rmSync(out,{force:true});}
 })().catch(error=>{console.error(error);process.exitCode=1;});

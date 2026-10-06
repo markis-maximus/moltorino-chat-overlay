@@ -155,6 +155,6 @@
     wrapper.appendChild(stage);
     return wrapper;
   }
-  global.OverlayModifiers=Object.freeze({version:'0.2.5',Flags,builtIn,resolve,apply,installStyles,supportedMask,
+  global.OverlayModifiers=Object.freeze({version:'0.2.6',Flags,builtIn,resolve,apply,installStyles,supportedMask,
     source:'https://github.com/FrankerFaceZ/FrankerFaceZ/blob/master/src/modules/chat/emotes.js'});
 })(typeof window==='object' ? window : globalThis);

@@ -28,7 +28,7 @@ const root=path.resolve(__dirname,'..');
     const name=row.querySelector('.name-text'),css=getComputedStyle(name);
     return {status:OverlayApp.getStatus(),paint:name.dataset.paint,clip:css.backgroundClip,filter:css.filter,badges:[...row.querySelectorAll('.badge')].map(i=>i.dataset.source),imagesDecoded:[...row.querySelectorAll('img')].every(i=>i.naturalWidth>0),spinB:spin?new DOMMatrix(getComputedStyle(spin.effect.target).transform).b:0,animations:animations.map(a=>a.animationName)};
    });
-   assert.equal(result.status.version,'0.2.5');assert.equal(result.clip,'text');assert.ok(result.imagesDecoded);assert.ok(Math.abs(result.spinB)>.1);assert.ok(result.animations.includes('overlay-ffz-bounce'));assert.deepEqual(errors,[]);
+   assert.equal(result.status.version,'0.2.6');assert.equal(result.clip,'text');assert.ok(result.imagesDecoded);assert.ok(Math.abs(result.spinB)>.1);assert.ok(result.animations.includes('overlay-ffz-bounce'));assert.deepEqual(errors,[]);
    results.push({source:address.startsWith('file:')?'standalone':'localhost',...result});await page.close();
   }
  }finally{await browser.close();}
