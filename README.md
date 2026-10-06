@@ -28,10 +28,6 @@ Capital letters do not matter. Keep any underscores that are part of the Twitch 
 
 [Download `chat-channelname-preview.html`](https://github.com/markis-maximus/moltorino-chat-overlay/releases/latest/download/chat-channelname-preview.html), rename it the same way, and select it as an OBS local file. It shows labeled example messages along with the live chat. The examples stay on your computer and are never posted to Twitch.
 
-## Give the overlay to someone else
-
-Make a copy of the HTML file and rename it with their Twitch channel. Send them that one renamed file. It works on Windows, macOS, and Linux in streaming software that can show a local browser file.
-
 ## Optional setup page
 
 The setup page gives you controls for text size, emote size, message count, fade time, badges, names, paints, and example messages. Use it only if you want those extra choices.
@@ -49,20 +45,20 @@ FFmpeg by itself cannot display an HTML overlay. An FFmpeg setup needs a browser
 
 | Input | Result |
 | --- | --- |
-| `heyy ffzW` | Wide |
-| `heyy ffzX` / `heyy ffzY` | Horizontal / vertical flip |
-| `heyy ffzJam` | Jam animation |
-| `heyy ffzBounce` | Bounce and squish |
-| `heyy ffzSpin` | Rotation |
-| `heyy ffzRainbow` | Animated hue shift |
-| `heyy ffzHyper` | Red filter and shake |
-| `heyy ffzCursed` | Dark, high-contrast grayscale |
-| `heyy ffzArrive` / `heyy ffzLeave` | Arrival / departure animation |
-| `heyy ffzSlide` | Repeating horizontal slide |
-| `heyy ffzW ffzRainbow ffzBounce` | Combined width, color, and motion |
-| `heyy JailTime ffzW` | 7TV layer and base widen together, when JailTime is enabled |
+| `ppL ffzW` | Wide |
+| `ppL ffzX` / `heyy ffzY` | Horizontal / vertical flip |
+| `ppL ffzJam` | Jam animation |
+| `ppL ffzBounce` | Bounce and squish |
+| `ppL ffzSpin` | Rotation |
+| `ppL ffzRainbow` | Animated hue shift |
+| `ppL ffzHyper` | Red filter and shake |
+| `ppL ffzCursed` | Dark, high-contrast grayscale |
+| `ppL ffzArrive` / `heyy ffzLeave` | Arrival / departure animation |
+| `ppL ffzSlide` | Repeating horizontal slide |
+| `ppL ffzW ffzRainbow ffzBounce` | Combined width, color, and motion |
+| `ppL JailTime ffzW` | 7TV layer and base widen together, when JailTime is enabled |
 
-Any recognized Twitch, FFZ, BTTV or 7TV base emote can be modified. `heyy` is enabled in the default channel. For another channel, use an emote enabled there. A chain attaches to the preceding emote; intervening ordinary text breaks it. Repeating the same effect does not multiply it. Arrive+Leave forms a six-second sequence. In v0.2.0, Spin, Shake, Jam, Bounce, and arrival/departure have independent nested animation stages. `WW ffzBounce ffzSpin ffzArrive ffzLeave ffzW` therefore spins, bounces, transitions, and stays wide. Slide also composes with Spin. This deliberately extends FFZ's shared CSS transform behavior; exact Moltorino frame timing is unverified. Detailed provenance and rules are in [research/ffz.md](research/ffz.md).
+Any recognized Twitch, FFZ, BTTV or 7TV base emote can be modified. `ppL` is a default global 7TV emote. For another channel, use an emote enabled there. A chain attaches to the preceding emote; intervening ordinary text breaks it. Repeating the same effect does not multiply it. Arrive+Leave forms a six-second sequence. In v0.2.0, Spin, Shake, Jam, Bounce, and arrival/departure have independent nested animation stages. `WW ffzBounce ffzSpin ffzArrive ffzLeave ffzW` therefore spins, bounces, transitions, and stays wide. Slide also composes with Spin. This deliberately extends FFZ's shared CSS transform behavior; exact Moltorino frame timing is unverified. Detailed provenance and rules are in [research/ffz.md](research/ffz.md).
 
 ## Username paints and badges
 
