@@ -46,17 +46,9 @@ FFmpeg by itself cannot display an HTML overlay. An FFmpeg setup needs a browser
 | Input | Result |
 | --- | --- |
 | `ppL ffzW` | Wide |
-| `ppL ffzX` / `heyy ffzY` | Horizontal / vertical flip |
-| `ppL ffzJam` | Jam animation |
-| `ppL ffzBounce` | Bounce and squish |
-| `ppL ffzSpin` | Rotation |
-| `ppL ffzRainbow` | Animated hue shift |
-| `ppL ffzHyper` | Red filter and shake |
+| `ppL ffzX` / `ppL ffzY` | Horizontal / vertical flip |
 | `ppL ffzCursed` | Dark, high-contrast grayscale |
-| `ppL ffzArrive` / `heyy ffzLeave` | Arrival / departure animation |
-| `ppL ffzSlide` | Repeating horizontal slide |
-| `ppL ffzW ffzRainbow ffzBounce` | Combined width, color, and motion |
-| `ppL JailTime ffzW` | 7TV layer and base widen together, when JailTime is enabled |
+| `ppL RailTime ffzW` | 7TV layer and base widen together, when RailTime is enabled |
 
 Any recognized Twitch, FFZ, BTTV or 7TV base emote can be modified. `ppL` is a default global 7TV emote. For another channel, use an emote enabled there. A chain attaches to the preceding emote; intervening ordinary text breaks it. Repeating the same effect does not multiply it. Arrive+Leave forms a six-second sequence. In v0.2.0, Spin, Shake, Jam, Bounce, and arrival/departure have independent nested animation stages. `WW ffzBounce ffzSpin ffzArrive ffzLeave ffzW` therefore spins, bounces, transitions, and stays wide. Slide also composes with Spin. This deliberately extends FFZ's shared CSS transform behavior; exact Moltorino frame timing is unverified. Detailed provenance and rules are in [research/ffz.md](research/ffz.md).
 
