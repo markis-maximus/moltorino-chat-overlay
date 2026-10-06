@@ -6,9 +6,9 @@ const root=path.resolve(__dirname,'..');
  const browser=await launch();
  try{
   const page=await browser.newPage({viewport:{width:800,height:500}});
-  await page.goto('http://127.0.0.1:18765/overlay.html?channel=markis_maximus&offline=1&test=1');
+  await page.goto('http://127.0.0.1:18765/overlay.html?channel=jynxzi&offline=1&test=1');
   const result=await page.evaluate(async()=>{
-   const data=await OverlayProviders.load('markis_maximus');const base=data.emotes.get('LMAO');
+   const data=await OverlayProviders.load('jynxzi');const base=data.emotes.get('LMAO');
    if(!base)return {found:false,similar:[...data.emotes.keys()].filter(k=>/lmao/i.test(k))};
    const rows=[];
    for(const suffix of ['', 'ffzArrive','ffzLeave','ffzArrive ffzLeave']){

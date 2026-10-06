@@ -5,7 +5,7 @@ This implementation reads public endpoints without account credentials. It never
 ## Providers
 
 - [Moltorino public badge registry](https://api.moltorino.com/v2/badges): schemaVersion 2; definitions in `badges`, assignments and preferences in `users`, category order in `layout.defaultOrder`. The overlay reads activeBadge, order, and hidden. An explicit null activeBadge means no selected Moltorino badge. The `decorations: false` field is conservatively interpreted as hiding paint; its complete native semantics have not been established.
-- [Bonnie's FFZ room](https://api.frankerfacez.com/v1/room/bonnie): channel ID 485587109, custom moderator images in `mod_urls`, VIP images in `vip_badge`. These replace corresponding Twitch badge images.
+- FFZ room responses can publish custom moderator images in `mod_urls` and VIP images in `vip_badge`. These replace corresponding Twitch badge images when a channel provides them.
 - [FFZ user badges](https://api.frankerfacez.com/v1/badges/ids): badge definitions and Twitch user assignments, including replacement semantics.
 - [7TV public Twitch-user endpoint](https://7tv.io/v3/users/twitch/227313621): active cosmetic IDs in `user.style`. The overlay looks up chatters by their IRC user-id and caches results.
 - [7TV GraphQL endpoint](https://7tv.io/v3/gql): read-only `cosmetics(list: ...)` query retrieves paint and badge definitions. Paints contain packed RGBA colors, gradients or image URLs, stops, and shadows; badges contain CDN host/file information.
@@ -17,15 +17,15 @@ Moltorino M15.5.2's executable contains a `MoltorinoPaintByID` GraphQL query usi
 
 ## Observed and rendered
 
-A 165-second anonymous sample of Bonnie received 49 messages from 11 users and 12 public 7TV dispatches. Only identity/badge metadata and cosmetic events were retained for local verification, not message bodies. Examples:
+A 165-second anonymous sample of an active reference channel received 49 messages from 11 users and 12 public 7TV dispatches. Only identity/badge metadata and cosmetic events were retained for local verification, not message bodies. Examples:
 
 - Djrr13: Ghoulish paint, England 7TV badge, Moltorino supporter badge, and FFZ badge.
-- ZincOC: Electric paint and Bonnie's custom VIP badge.
-- TheBRGbot: Bonnie's custom moderator badge.
+- ZincOC: Electric paint and a channel-specific custom VIP badge.
+- TheBRGbot: a channel-specific custom moderator badge.
 
 All those badge images decoded in Chromium. Public MoltoBenne data additionally exercised North Star's repeating gradient and developer badge. Paint shadows are applied as the published CSS drop-shadows; some produce strong glows.
 
-The full production app was separately tested on localhost and as a standalone file. Both connected anonymously to Bonnie, loaded 1,111 emote aliases, and fetched/rendered Djrr13's paint and 7TV/Moltorino badges without replaying captured events. A local test-only injection supplied neutral emote text; it was never sent to Twitch. The exact WW modifier chain had independently active Spin, Bounce, and Arrive/Leave animations with a nonzero rotation matrix.
+The full production app was separately tested on localhost and as a standalone file. Both connected anonymously to an active channel, loaded 1,111 emote aliases, and fetched/rendered Djrr13's paint and 7TV/Moltorino badges without replaying captured events. A local test-only injection supplied neutral emote text; it was never sent to Twitch. The exact WW modifier chain had independently active Spin, Bounce, and Arrive/Leave animations with a nonzero rotation matrix.
 
 ## v0.2.1 badge follow-up
 

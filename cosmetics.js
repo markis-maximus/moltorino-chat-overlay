@@ -132,7 +132,7 @@
   }
   function profile(message,badgeMap=new Map()){
    const id=String(message.userId||''),u=users.get(id)||{},preferences=registry.users?.[id]||{};
-   let badges=(message.badges||[]).map(b=>{const asset=badgeMap.get(`${b.set}/${b.version}`);return {id:'t:'+b.set,source:twitchCategory(b.set),set:b.set,title:b.set,...(typeof asset==='string'?{url:asset}:asset)};}).filter(b=>b.url);
+   let badges=(message.badges||[]).map(b=>{const asset=badgeMap.get(`${b.set}/${b.version}`);return {id:'t:'+b.set,source:twitchCategory(b.set),set:b.set,title:b.set,...(b.set==='moderator'?{color:'#34ae0a'}:{}),...(typeof asset==='string'?{url:asset}:asset)};}).filter(b=>b.url);
    for(const item of ffz)if(item.users.has(id)&&item.badge.url){
     const replaced=badges.find(b=>b.set===item.badge.replaces);
     if(item.badge.replaces)badges=badges.filter(b=>b.set!==item.badge.replaces);

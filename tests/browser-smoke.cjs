@@ -101,7 +101,7 @@ async function check(name,fn){try{await fn();results.push({name,passed:true});}c
     const local=await browser.newPage({viewport:{width:1000,height:800}});
     const localErrors=[];local.on('pageerror',error=>localErrors.push(error.message));
     await check('localhost offline demo contains all 12 FFZ modifiers without broken images',async()=>{
-      await local.goto('http://127.0.0.1:18765/overlay.html?channel=markis_maximus&demo=1&offline=1');
+      await local.goto('http://127.0.0.1:18765/overlay.html?channel=jynxzi&demo=1&offline=1');
       await local.waitForFunction(()=>document.querySelectorAll('.message.preview').length>=6);
       await local.waitForFunction(()=>[...document.images].every(image=>image.complete));
       const result=await local.evaluate(()=>({rows:document.querySelectorAll('.message.preview').length,modifiers:[...document.querySelectorAll('.emote-unit')].flatMap(n=>n.dataset.modifiers.split(' ')),broken:[...document.images].filter(i=>!i.naturalWidth).length}));
@@ -110,7 +110,7 @@ async function check(name,fn){try{await fn();results.push({name,passed:true});}c
       fs.mkdirSync(path.join(root,'test-results'),{recursive:true});await local.screenshot({path:path.join(root,'test-results','offline-demo.png'),omitBackground:true});
     });
     await check('localhost live source loads catalogs and joins Twitch read-only',async()=>{
-      await local.goto('http://127.0.0.1:18765/overlay.html?channel=markis_maximus&demo=1&debug=1');
+      await local.goto('http://127.0.0.1:18765/overlay.html?channel=jynxzi&demo=1&debug=1');
       await local.waitForFunction(()=>globalThis.OverlayApp?.getStatus().connection==='connected'&&OverlayApp.getStatus().loaded>0,{},{timeout:45000});
       await local.waitForFunction(()=>document.querySelectorAll('.message.preview').length>=6);
       await local.waitForFunction(()=>[...document.images].every(image=>image.complete),{},{timeout:30000});
@@ -122,7 +122,7 @@ async function check(name,fn){try{await fn();results.push({name,passed:true});}c
     });
     await check('single HTML file joins Twitch and loads public emotes without local hosting',async()=>{
       const {pathToFileURL}=require('node:url');
-      await local.goto(pathToFileURL(path.join(root,'dist','chat-markis_maximus-preview.html')).href);
+      await local.goto(pathToFileURL(path.join(root,'dist','chat-jynxzi-preview.html')).href);
       await local.waitForFunction(()=>globalThis.OverlayApp?.getStatus().connection==='connected'&&OverlayApp.getStatus().loaded>0,{},{timeout:45000});
       await local.waitForFunction(()=>document.querySelectorAll('.message.preview').length>=6);
       const state=await local.evaluate(()=>OverlayApp.getStatus());assert.equal(state.connection,'connected');assert.ok(state.loaded>0);assert.equal(localErrors.length,0);

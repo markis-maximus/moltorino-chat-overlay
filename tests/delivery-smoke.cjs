@@ -9,7 +9,7 @@ const result={};
  try{
   const page=await browser.newPage({viewport:{width:1280,height:1400}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto('http://127.0.0.1:18765/');
-  await page.locator('#channel').fill('markis_maximus');
+  await page.locator('#channel').fill('jynxzi');
   await page.locator('#fontSize').fill('26');
   await page.locator('button[type=submit]').click();
   assert.match(await page.locator('#sourceUrl').inputValue(),/fontSize=26/);

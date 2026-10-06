@@ -7,10 +7,13 @@ const root=path.resolve(__dirname,'..');
  const browser=await launch();
  const results=[];
  try{
-  for(const address of ['http://127.0.0.1:18765/overlay.html?channel=bonnie&test=1',pathToFileURL(path.join(root,'dist/chat-bonnie.html')).href+'?test=1']){
-   const page=await browser.newPage({viewport:{width:1000,height:900}}),errors=[];
+  for(const address of ['http://127.0.0.1:18765/overlay.html?channel=jynxzi&test=1&maxMessages=100',pathToFileURL(path.join(root,'dist/chat-jynxzi.html')).href+'?test=1&maxMessages=100']){
+   // Jynxzi is deliberately used as a busy public reference channel. The tall
+   // viewport keeps its live traffic from evicting the locally injected row.
+   const page=await browser.newPage({viewport:{width:1000,height:10000}}),errors=[];
    page.on('pageerror',e=>errors.push(e.message));await page.goto(address);
    await page.waitForFunction(()=>OverlayApp.getStatus().loaded>100&&OverlayApp.getStatus().connection==='connected',null,{timeout:60000});
+   await page.evaluate(()=>OverlayApp.disconnect());
    // Local renderer injection only; no messages are sent to Twitch.
    await page.evaluate(()=>OverlayApp.inject({id:'cosmetic-integration',userId:'227313621',username:'djrr13',displayName:'Djrr13',text:'WW ffzBounce ffzSpin ffzArrive ffzLeave ffzW',badges:[]}));
    const row=page.locator('[data-id="cosmetic-integration"]');
@@ -25,7 +28,7 @@ const root=path.resolve(__dirname,'..');
     const name=row.querySelector('.name-text'),css=getComputedStyle(name);
     return {status:OverlayApp.getStatus(),paint:name.dataset.paint,clip:css.backgroundClip,filter:css.filter,badges:[...row.querySelectorAll('.badge')].map(i=>i.dataset.source),imagesDecoded:[...row.querySelectorAll('img')].every(i=>i.naturalWidth>0),spinB:spin?new DOMMatrix(getComputedStyle(spin.effect.target).transform).b:0,animations:animations.map(a=>a.animationName)};
    });
-   assert.equal(result.status.version,'0.2.2');assert.equal(result.clip,'text');assert.ok(result.imagesDecoded);assert.ok(Math.abs(result.spinB)>.1);assert.ok(result.animations.includes('overlay-ffz-bounce'));assert.deepEqual(errors,[]);
+   assert.equal(result.status.version,'0.2.3');assert.equal(result.clip,'text');assert.ok(result.imagesDecoded);assert.ok(Math.abs(result.spinB)>.1);assert.ok(result.animations.includes('overlay-ffz-bounce'));assert.deepEqual(errors,[]);
    results.push({source:address.startsWith('file:')?'standalone':'localhost',...result});await page.close();
   }
  }finally{await browser.close();}

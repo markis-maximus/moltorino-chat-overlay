@@ -5,9 +5,11 @@ const root=path.resolve(__dirname,'..');
 (async()=>{
  const browser=await launch();const results=[];
  try{
-  for(const address of ['http://127.0.0.1:18765/overlay.html?channel=bonnie&test=1',pathToFileURL(path.join(root,'dist/chat-bonnie.html')).href+'?test=1']){
-   const page=await browser.newPage({viewport:{width:1000,height:900}}),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(address);
-   await page.waitForFunction(()=>OverlayApp.getStatus().loaded>100,null,{timeout:45000});
+  for(const address of ['http://127.0.0.1:18765/overlay.html?channel=jynxzi&test=1&maxMessages=100',pathToFileURL(path.join(root,'dist/chat-jynxzi.html')).href+'?test=1&maxMessages=100']){
+   // Keep locally injected fixtures visible while the busy reference channel runs.
+   const page=await browser.newPage({viewport:{width:1000,height:10000}}),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(address);
+   await page.waitForFunction(()=>OverlayApp.getStatus().loaded>100&&OverlayApp.getStatus().connection==='connected',null,{timeout:45000});
+   await page.evaluate(()=>OverlayApp.disconnect());
    await page.evaluate(()=>{
     for(const [userId,displayName,badges] of [['657457116','moonie142',[]],['705840357','Karma_SL',[]],['732707575','TheBRGbot',[{set:'moderator',version:'1'}]],['100135110','StreamElements',[{set:'moderator',version:'1'}]]])OverlayApp.inject({id:'regression-'+userId,userId,username:displayName.toLowerCase(),displayName,badges,text:'Local badge verification'});
    });

@@ -5,13 +5,11 @@ const root=path.resolve(__dirname,'..');
  const browser=await launch();
  try{
   const page=await browser.newPage({viewport:{width:1100,height:500}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
-  await page.goto('http://127.0.0.1:18765/overlay.html?channel=bonnie&offline=1&test=1');
-  const observation=JSON.parse(fs.readFileSync(path.join(root,'research/snapshots/bonnie-live.json'),'utf8'));
-  const report=await page.evaluate(async observation=>{
-   const data=await OverlayProviders.load('bonnie'),service=OverlayCosmetics.create();await service.refresh();
-   for(const e of observation.events)service.ingest(e.type,e.body);
+  await page.goto('http://127.0.0.1:18765/overlay.html?channel=jynxzi&offline=1&test=1');
+  const report=await page.evaluate(async()=>{
+   const data=await OverlayProviders.load('jynxzi'),service=OverlayCosmetics.create();await service.refresh();
    const ids=['227313621','90843101','506954718'];await Promise.all(ids.map(id=>service.ensureUser(id)));
-   const selected=[observation.users.find(u=>u.id==='227313621'),observation.users.find(u=>u.id==='90843101'),observation.users.find(u=>u.badges.some(b=>b.set==='moderator')),{id:'506954718',username:'moltobenne_',displayName:'MoltoBenne',badges:[]}].filter(Boolean);
+   const selected=[{id:'227313621',username:'djrr13',displayName:'Djrr13',badges:[]},{id:'90843101',username:'zincoc',displayName:'ZincOC',badges:[]},{id:'506954718',username:'moltobenne_',displayName:'MoltoBenne',badges:[]}];
    const rows=[];
    for(const u of selected){
     const message={...u,userId:u.id,text:'WW ffzBounce ffzSpin ffzArrive ffzLeave ffzW'};
@@ -23,14 +21,11 @@ const root=path.resolve(__dirname,'..');
    const animations=unit.getAnimations({subtree:true});const times=animations.map(a=>a.currentTime);
    OverlayRenderer.decorate(row,{displayName:'Djrr13',userId:'227313621',color:'#aa44bb',badges:[]},{cosmeticsProfile:service.profile({userId:'227313621',badges:[]},data.badges)});
    const preserved=row.querySelector('.emote-unit')===unit&&animations.every((a,i)=>a.currentTime===times[i]);
-   const result={channel:data.channelId,mod:data.badges.get('moderator/1'),vip:data.badges.get('vip/1'),rows,cosmeticUpdatePreservedEmotes:preserved};service.close();return result;
-  },observation);
-  assert.match(report.mod.url,/frankerfacez.*room-badge\/mod/);assert.equal(report.mod.color,'#34ae0a');assert.match(report.vip,/frankerfacez.*room-badge\/vip/);
+   const result={channel:data.channelId,rows,cosmeticUpdatePreservedEmotes:preserved};service.close();return result;
+  });
   assert.ok(report.rows.some(r=>r.paintStyle?.startsWith('linear-gradient')),'real observed paint renders');
   assert.ok(report.rows.some(r=>r.badges.some(b=>b.source==='7'&&b.loaded)),'7TV badge image decodes');
   assert.ok(report.rows.some(r=>r.badges.some(b=>b.source==='m'&&b.loaded)),'Moltorino badge image decodes');
-  assert.ok(report.rows.some(r=>r.badges.some(b=>b.id==='t:vip'&&b.loaded)),'channel VIP badge decodes');
-  assert.ok(report.rows.some(r=>r.badges.some(b=>b.id==='t:moderator'&&b.loaded)),'channel mod badge decodes');
   assert.ok(report.cosmeticUpdatePreservedEmotes);assert.deepEqual(errors,[]);
   fs.mkdirSync(path.join(root,'test-results'),{recursive:true});fs.writeFileSync(path.join(root,'test-results','cosmetics.json'),JSON.stringify(report,null,2));
   await page.screenshot({path:path.join(root,'test-results','cosmetics.png'),omitBackground:true});console.log(JSON.stringify(report,null,2));

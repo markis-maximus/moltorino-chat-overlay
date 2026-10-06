@@ -12,7 +12,7 @@ Download the latest release from [GitHub Releases](https://github.com/markis-max
 - **macOS or Linux:** open a terminal in the extracted folder and run `./start-overlay.sh`. If the ZIP extractor removed its executable bit, run `chmod +x start-overlay.sh` once.
 - **Any OS with Node.js:** run `npm start` or `node server.mjs`.
 
-Node.js 18 or newer is required for the setup server. It has no runtime packages to install. Open [http://127.0.0.1:18765/overlay.html?channel=](http://127.0.0.1:18765/overlay.html?channel=), enter a Twitch channel, and either copy the localhost browser-source URL or download a self-contained HTML overlay.
+Node.js 18 or newer is required for the setup server. It has no runtime packages to install. Open [http://127.0.0.1:18765/](http://127.0.0.1:18765/), enter a Twitch channel, and either copy the localhost browser-source URL or download a self-contained HTML overlay.
 
 The downloaded HTML needs no server and no Node.js. In OBS, add **Browser**, enable **Local file**, select the HTML, and use a size such as **800 × 500**. The same file works with other Chromium/CEF-based broadcast tools that accept a local HTML browser source.
 
@@ -31,7 +31,7 @@ The setup page at **http://127.0.0.1:18765/** lets you change the channel, text 
 ## Use or share it without a server
 
 1. Select **Browser → Local file** in OBS.
-2. Choose `dist/chat-{channelname}-preview.html` to immediately see the effects, or `dist/chat-{channelname}.html` for live chat only. To create another channel's files, run `npm run build -- --channel=your_channel`.
+2. Choose `dist/chat-{channelname}-preview.html` to immediately see the effects, or `dist/chat-{channelname}.html` for live chat only. The included example uses Jynxzi; create another channel's files with `npm run build -- --channel={channelname}`.
 3. Set the source size to 800 × 500 or your preferred dimensions.
 
 The HTML includes its CSS, JavaScript, FFZ keyframes, and preview image. You can send that one file to another streamer. Use the setup page first to download a file configured for their channel; no Node.js or server is needed to run the downloaded file. In other Chromium/CEF-based streaming tools, load the HTML file as a transparent browser layer. FFmpeg itself does not execute HTML: a custom FFmpeg pipeline needs a browser renderer/capture stage to provide the overlay frames.
@@ -84,7 +84,7 @@ npm install
 npx playwright install chromium
 npm test
 npm run test:browser
-node build.mjs --channel=your_channel
+node build.mjs --channel={channelname}
 node server.mjs
 ```
 

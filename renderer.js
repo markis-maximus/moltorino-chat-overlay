@@ -91,7 +91,7 @@
     let holder=row.querySelector('.message-badges');
     if(!holder){holder=document.createElement('span');holder.className='message-badges';row.prepend(holder);}
     const profile=options.cosmeticsProfile;
-    const badges=options.badges===false?[]:(profile?.badges||(message.badges||[]).map(b=>{const asset=options.badgeMap?.get(`${b.set}/${b.version}`);return {id:b.set,source:'twitch',title:b.set,...(typeof asset==='string'?{url:asset}:asset)};})).slice(0,24);
+    const badges=options.badges===false?[]:(profile?.badges||(message.badges||[]).map(b=>{const asset=options.badgeMap?.get(`${b.set}/${b.version}`);return {id:b.set,source:'twitch',title:b.set,...(b.set==='moderator'?{color:'#34ae0a'}:{}),...(typeof asset==='string'?{url:asset}:asset)};})).slice(0,24);
     const signature=JSON.stringify(badges);
     if(badgeSignatures.get(holder)!==signature){
     badgeSignatures.set(holder,signature);holder.replaceChildren();

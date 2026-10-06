@@ -7,7 +7,7 @@ const root=path.resolve(__dirname,'..');
  const results=[],capacity=[];
  try{
   const page=await browser.newPage({viewport:{width:800,height:500}});
-  await page.goto(process.env.OVERLAY_TEST_URL||'http://127.0.0.1:18765/overlay.html?channel=bonnie&offline=1&test=1');
+  await page.goto(process.env.OVERLAY_TEST_URL||'http://127.0.0.1:18765/overlay.html?channel=test_channel&offline=1&test=1');
   for(const size of [36,72]){
    for(const time of [0,125,375,900,2375,3500,4500]){
     results.push(...await page.evaluate(({size,time})=>{

@@ -4,19 +4,19 @@ Checked 2026-10-05 without launching or controlling any desktop application, rea
 
 ## Endpoint checks
 
-All endpoint checks below returned HTTP 200. Requests included `Origin: null` to check whether a `file://` browser source is accepted. FFZ and IVR replied with `Access-Control-Allow-Origin: *`; BTTV and 7TV reflected `null`. No account token is needed.
+Provider checks used `jynxzi` as a high-activity public reference channel. Requests included `Origin: null` to check whether a `file://` browser source is accepted. The optional FFZ room request currently returns 404 for this channel, exercising the IVR channel-ID fallback; the other listed endpoints returned HTTP 200. No account token is needed.
 
 | Provider | Endpoint | Observed schema |
 | --- | --- | --- |
 | FFZ global | https://api.frankerfacez.com/v1/set/global | `default_sets`, `sets[id].emoticons` |
-| FFZ channel | https://api.frankerfacez.com/v1/room/markis_maximus | `room.twitch_id` is `95463358`; room emote sets |
+| FFZ channel | https://api.frankerfacez.com/v1/room/jynxzi | Optional room metadata; currently 404 for this reference channel |
 | BTTV global | https://api.betterttv.net/3/cached/emotes/global | Array of emotes with `id`, `code`, optional dimensions and `modifier` |
-| BTTV channel | https://api.betterttv.net/3/cached/users/twitch/95463358 | `channelEmotes` and `sharedEmotes` |
+| BTTV channel | https://api.betterttv.net/3/cached/users/twitch/411377640 | `channelEmotes` and `sharedEmotes` |
 | 7TV global | https://7tv.io/v3/emote-sets/global | Active emotes with alias `name`, `data.flags`, and `data.host.files` |
-| 7TV channel | https://7tv.io/v3/users/twitch/95463358 | `emote_set.emotes`; current IDs include ULIDs, so no fixed hex length assumed |
-| IVR channel fallback | https://api.ivr.fi/v2/twitch/user?login=markis_maximus | Array, user `id` and `login` |
+| 7TV channel | https://7tv.io/v3/users/twitch/411377640 | `emote_set.emotes`; current IDs include ULIDs, so no fixed hex length assumed |
+| IVR channel fallback | https://api.ivr.fi/v2/twitch/user?login=jynxzi | Array; reference user ID `411377640` |
 | IVR global badges | https://api.ivr.fi/v2/twitch/badges/global | Array of badge sets and versions, with Twitch CDN image URLs |
-| IVR channel badges | https://api.ivr.fi/v2/twitch/badges/channel?id=95463358 | Array of badge sets; empty for this channel |
+| IVR channel badges | https://api.ivr.fi/v2/twitch/badges/channel?id=411377640 | Array of channel badge sets |
 
 IVR is a public third-party Twitch data mirror, used only for optional badge data and channel ID fallback. The legacy `badges.twitch.tv` hostname failed DNS resolution during this check; it is not used. Twitch emotes use the emote IDs and ranges supplied with each IRC message, so the overlay does not need an authenticated Twitch emote-catalog call.
 
@@ -28,7 +28,7 @@ FFZ's live global API publishes twelve modifier emotes and flags: `ffzW=9`, `ffz
 
 The parser retains inclusive emote ranges as Unicode code point indexes, strips the `\x01ACTION ` wrapper before rendering, unescapes IRCv3 tags, handles multiple lines or partial lines, and delivers message deletions and per-user/channel chat clears. It reconnects with bounded exponential backoff and suppresses recently repeated message IDs.
 
-A live anonymous connection to `markis_maximus` completed and received Twitch `ROOMSTATE`/join confirmation, then closed immediately. No user chat content was retained and no messages or moderation actions were sent. The complete live catalog loaded 589 emote aliases and 520 badge variants, including the actual `heyy` emote (`01FN25QCP000071FCSB63SB4G4`) and all twelve FFZ modifier descriptors, with zero failed provider requests.
+A live anonymous connection to the configured reference channel completed and received Twitch `ROOMSTATE`/join confirmation, then closed immediately. No user chat content was retained and no messages or moderation actions were sent. Provider loading included the channel catalog and all twelve FFZ modifier descriptors.
 
 Provider loading is best effort with a ten-second timeout per request. Global provider calls run concurrently, followed by channel data once the Twitch ID is known. Each successful endpoint response is retained in memory and reused if a later refresh fails. Endpoint-specific keys keep one channel's cached emotes out of another channel's catalog. Channel emotes override global aliases; 7TV takes priority over FFZ and BTTV within each scope. All returned FFZ global sets contribute modifier definitions, including sets omitted from `default_sets`. All remote images use HTTPS. No remote CSS or JavaScript from emote metadata is executed.
 

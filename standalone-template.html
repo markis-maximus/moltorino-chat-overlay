@@ -196,7 +196,7 @@ globalThis.OverlayDemoBrightEmote = {"name":"Kappa","id":"25","width":25,"height
     wrapper.appendChild(stage);
     return wrapper;
   }
-  global.OverlayModifiers=Object.freeze({version:'0.2.2',Flags,builtIn,resolve,apply,installStyles,supportedMask,
+  global.OverlayModifiers=Object.freeze({version:'0.2.3',Flags,builtIn,resolve,apply,installStyles,supportedMask,
     source:'https://github.com/FrankerFaceZ/FrankerFaceZ/blob/master/src/modules/chat/emotes.js'});
 })(typeof window==='object' ? window : globalThis);
 
@@ -721,7 +721,7 @@ globalThis.OverlayDemoBrightEmote = {"name":"Kappa","id":"25","width":25,"height
   }
   function profile(message,badgeMap=new Map()){
    const id=String(message.userId||''),u=users.get(id)||{},preferences=registry.users?.[id]||{};
-   let badges=(message.badges||[]).map(b=>{const asset=badgeMap.get(`${b.set}/${b.version}`);return {id:'t:'+b.set,source:twitchCategory(b.set),set:b.set,title:b.set,...(typeof asset==='string'?{url:asset}:asset)};}).filter(b=>b.url);
+   let badges=(message.badges||[]).map(b=>{const asset=badgeMap.get(`${b.set}/${b.version}`);return {id:'t:'+b.set,source:twitchCategory(b.set),set:b.set,title:b.set,...(b.set==='moderator'?{color:'#34ae0a'}:{}),...(typeof asset==='string'?{url:asset}:asset)};}).filter(b=>b.url);
    for(const item of ffz)if(item.users.has(id)&&item.badge.url){
     const replaced=badges.find(b=>b.set===item.badge.replaces);
     if(item.badge.replaces)badges=badges.filter(b=>b.set!==item.badge.replaces);
@@ -841,7 +841,7 @@ globalThis.OverlayDemoBrightEmote = {"name":"Kappa","id":"25","width":25,"height
     let holder=row.querySelector('.message-badges');
     if(!holder){holder=document.createElement('span');holder.className='message-badges';row.prepend(holder);}
     const profile=options.cosmeticsProfile;
-    const badges=options.badges===false?[]:(profile?.badges||(message.badges||[]).map(b=>{const asset=options.badgeMap?.get(`${b.set}/${b.version}`);return {id:b.set,source:'twitch',title:b.set,...(typeof asset==='string'?{url:asset}:asset)};})).slice(0,24);
+    const badges=options.badges===false?[]:(profile?.badges||(message.badges||[]).map(b=>{const asset=options.badgeMap?.get(`${b.set}/${b.version}`);return {id:b.set,source:'twitch',title:b.set,...(b.set==='moderator'?{color:'#34ae0a'}:{}),...(typeof asset==='string'?{url:asset}:asset)};})).slice(0,24);
     const signature=JSON.stringify(badges);
     if(badgeSignatures.get(holder)!==signature){
     badgeSignatures.set(holder,signature);holder.replaceChildren();
@@ -873,7 +873,7 @@ globalThis.OverlayDemoBrightEmote = {"name":"Kappa","id":"25","width":25,"height
 </script><script>
 (function(){
   'use strict';
-  const defaults={channel:'markis_maximus',fontSize:24,emoteSize:36,maxMessages:30,fade:0,badges:true,names:true,paints:true,demo:false};
+  const defaults={channel:'jynxzi',fontSize:24,emoteSize:36,maxMessages:30,fade:0,badges:true,names:true,paints:true,demo:false};
   const qs=new URLSearchParams(location.search || location.hash.replace(/^#/, '?'));
   const config={...defaults,...(globalThis.OVERLAY_CONFIG||{})};
   const numeric=(key,min,max)=>{const n=Number(qs.get(key)??config[key]);config[key]=Number.isFinite(n)?Math.min(max,Math.max(min,n)):defaults[key];};
@@ -958,9 +958,9 @@ globalThis.OverlayDemoBrightEmote = {"name":"Kappa","id":"25","width":25,"height
     for(const row of [...chat.children])if(matches({userId:row.dataset.userId,username:row.dataset.username}))row.remove();
   }
   function removeMessage(info){pending=pending.filter(m=>m.id!==info.id);for(const row of [...chat.children])if(row.dataset.id===info.id)row.remove();}
-  if(!/^[a-z0-9_]{1,25}$/.test(config.channel)){status.hidden=false;status.textContent='Set a valid Twitch channel in the source URL: ?channel=your_channel';return;}
+  if(!/^[a-z0-9_]{1,25}$/.test(config.channel)){status.hidden=false;status.textContent='Set a valid Twitch channel in the source URL: ?channel={channelname}';return;}
   window.OverlayApp={getStatus:()=>({...state,config:{...config},cosmetics:cosmetics?.stats()||null}),refresh:()=>refresh(false)};
-  if(qs.get('test')==='1'){Object.assign(window.OverlayApp,{inject:receive,setCatalog:map=>{catalog=map;loading=false;},clear,removeMessage,demo});}
+  if(qs.get('test')==='1'){Object.assign(window.OverlayApp,{inject:receive,setCatalog:map=>{catalog=map;loading=false;},clear,removeMessage,demo,disconnect:()=>connection?.close()});}
   if(offline){loading=false;catalog.set('heyy',globalThis.OverlayDemoEmote);setStatus({state:'offline',message:'Offline preview; no chat connection.'});if(config.demo)demo();}
   else{
     if(config.demo)demo();

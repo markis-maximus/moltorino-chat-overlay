@@ -1,6 +1,6 @@
 {
   "name": "local-ffz-chat-overlay",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "private": true,
   "description": "Portable Twitch chat browser source with FFZ effects, 7TV layers, paints, and custom badges",
   "scripts": {

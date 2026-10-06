@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const defaults={channel:'markis_maximus',fontSize:24,emoteSize:36,maxMessages:30,fade:0,badges:true,names:true,paints:true,demo:false};
+  const defaults={channel:'jynxzi',fontSize:24,emoteSize:36,maxMessages:30,fade:0,badges:true,names:true,paints:true,demo:false};
   const qs=new URLSearchParams(location.search || location.hash.replace(/^#/, '?'));
   const config={...defaults,...(globalThis.OVERLAY_CONFIG||{})};
   const numeric=(key,min,max)=>{const n=Number(qs.get(key)??config[key]);config[key]=Number.isFinite(n)?Math.min(max,Math.max(min,n)):defaults[key];};
@@ -85,9 +85,9 @@
     for(const row of [...chat.children])if(matches({userId:row.dataset.userId,username:row.dataset.username}))row.remove();
   }
   function removeMessage(info){pending=pending.filter(m=>m.id!==info.id);for(const row of [...chat.children])if(row.dataset.id===info.id)row.remove();}
-  if(!/^[a-z0-9_]{1,25}$/.test(config.channel)){status.hidden=false;status.textContent='Set a valid Twitch channel in the source URL: ?channel=your_channel';return;}
+  if(!/^[a-z0-9_]{1,25}$/.test(config.channel)){status.hidden=false;status.textContent='Set a valid Twitch channel in the source URL: ?channel={channelname}';return;}
   window.OverlayApp={getStatus:()=>({...state,config:{...config},cosmetics:cosmetics?.stats()||null}),refresh:()=>refresh(false)};
-  if(qs.get('test')==='1'){Object.assign(window.OverlayApp,{inject:receive,setCatalog:map=>{catalog=map;loading=false;},clear,removeMessage,demo});}
+  if(qs.get('test')==='1'){Object.assign(window.OverlayApp,{inject:receive,setCatalog:map=>{catalog=map;loading=false;},clear,removeMessage,demo,disconnect:()=>connection?.close()});}
   if(offline){loading=false;catalog.set('heyy',globalThis.OverlayDemoEmote);setStatus({state:'offline',message:'Offline preview; no chat connection.'});if(config.demo)demo();}
   else{
     if(config.demo)demo();

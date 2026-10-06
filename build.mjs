@@ -10,7 +10,7 @@ const license=await readFile(path.join(root,'LICENSE-FFZ.txt'),'utf8');
 html=html.replace('<head>',`<head><!-- FFZ effect code adapted under Apache-2.0. Copyright 2016 Dan Salvato LLC and contributors.\n${license.replace(/--/g,'—')}\n-->`);
 await writeFile(path.join(root,'standalone-template.html'),html);
 await mkdir(path.join(root,'dist'),{recursive:true});
-const channel=(process.argv.find(x=>x.startsWith('--channel='))?.split('=')[1]||'markis_maximus').toLowerCase();
+const channel=(process.argv.find(x=>x.startsWith('--channel='))?.split('=')[1]||'jynxzi').toLowerCase();
 if(!/^[a-z0-9_]{1,25}$/.test(channel))throw new Error('Invalid channel');
 for(const demo of [false,true]){
   const file=`chat-${channel}${demo?'-preview':''}.html`;
