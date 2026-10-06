@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.8 — 2026-10-06
+
+- Replace the workflow-specific integration guide with universal browser-source and local-file instructions.
+- Add a complete setup-page walkthrough with screenshots and descriptions for every control.
+- Document all twelve FFZ modifiers individually and add end-to-end setup control coverage.
+
 ## 0.2.7 — 2026-10-06
 
 - Shorten the four opening preview messages from 20 seconds to 8 seconds.
