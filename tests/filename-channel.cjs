@@ -15,9 +15,14 @@ const root=path.resolve(__dirname,'..'),out=path.join(root,'test-results','chat-
   assert.equal(fileState.version,'0.2.6');
   const html=fs.readFileSync(path.join(root,'dist','chat-channelname.html'),'utf8');
   await page.route('http://absolute/**',route=>route.fulfill({contentType:'text/html',body:html}));
-  await page.goto('http://absolute/D:/Downloads/chat-obs_channel.html?offline=1');
-  const obsState=await page.evaluate(()=>OverlayApp.getStatus());
-  assert.equal(obsState.channel,'obs_channel');
-  console.log('Renamed standalone channels:',{file:fileState.channel,obs:obsState.channel});
+  const obsChannels=[];
+  for(const [address,channel] of [
+   ['http://absolute/D:/Downloads/chat-windows_channel.html?offline=1','windows_channel'],
+   ['http://absolute/Users/streamer/Downloads/chat-macos_channel.html?offline=1','macos_channel'],
+   ['http://absolute/home/streamer/chat-linux_channel.html?offline=1','linux_channel'],
+  ]){
+   await page.goto(address);const state=await page.evaluate(()=>OverlayApp.getStatus());assert.equal(state.channel,channel);obsChannels.push(state.channel);
+  }
+  console.log('Renamed standalone channels:',{file:fileState.channel,obs:obsChannels});
  }finally{await browser.close();fs.rmSync(out,{force:true});}
 })().catch(error=>{console.error(error);process.exitCode=1;});

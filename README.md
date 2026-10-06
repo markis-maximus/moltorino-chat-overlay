@@ -37,6 +37,18 @@ The setup page requires Node.js 18 or newer. The one-file method above does not.
 
 FFmpeg by itself cannot display an HTML overlay. An FFmpeg setup needs a browser layer that can show the file.
 
+## ChronicCmposer's Strimserver
+
+This overlay fits [Strimserver](https://github.com/ChronicCmposer/strimserver) at its local OBS step:
+
+1. Download and rename the HTML to `chat-chroniccmposer.html`.
+2. Add it to the local OBS scene as a **Browser → Local file** source.
+3. Start the stream normally.
+
+Strimserver receives the finished OBS picture, including the chat overlay, through its existing local encoder and SRT pipeline. Nothing needs to be installed in Strimserver's cloud containers.
+
+The same local-file source works when OBS runs on macOS, Linux, or Windows. If a setup sends video with FFmpeg and never uses OBS or another browser renderer, it must add a browser-rendering step first; FFmpeg alone cannot open HTML.
+
 ## Supported effects
 
 | Input | Result |
