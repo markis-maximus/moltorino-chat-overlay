@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.4 — 2026-10-06
+
+- Let a standalone overlay get its Twitch channel from its filename. Rename `chat-channelname.html` to `chat-yourname.html` and load it as a local browser source.
+- Put the one-file, no-server OBS setup first in the README and move the optional setup server into its own section.
+
 ## 0.2.3 — 2026-10-05
 
 - Use `{channelname}` for copyable documentation examples and Jynxzi as the shipped public reference channel.
