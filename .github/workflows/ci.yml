@@ -29,4 +29,4 @@ jobs:
       - run: npm run test:browser
       - run: npm run build -- --channel=example_channel
       - shell: bash
-        run: test -s dist/chat-example_channel.html && test -s dist/chat-example_channel-preview.html
+        run: test -s dist/chat-example_channel.html

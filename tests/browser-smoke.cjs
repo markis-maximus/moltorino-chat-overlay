@@ -100,31 +100,34 @@ async function check(name,fn){try{await fn();results.push({name,passed:true});}c
   if(process.argv.includes('--local')){
     const local=await browser.newPage({viewport:{width:1000,height:800}});
     const localErrors=[];local.on('pageerror',error=>localErrors.push(error.message));
-    await check('localhost offline demo contains all 12 FFZ modifiers without broken images',async()=>{
+    await check('localhost offline demo contains the four global examples without broken images',async()=>{
       await local.goto('http://127.0.0.1:18765/overlay.html?channel=jynxzi&demo=1&offline=1');
-      await local.waitForFunction(()=>document.querySelectorAll('.message.preview').length>=6);
+      await local.waitForFunction(()=>document.querySelectorAll('.message.preview').length===4);
       await local.waitForFunction(()=>[...document.images].every(image=>image.complete));
       const result=await local.evaluate(()=>({rows:document.querySelectorAll('.message.preview').length,modifiers:[...document.querySelectorAll('.emote-unit')].flatMap(n=>n.dataset.modifiers.split(' ')),broken:[...document.images].filter(i=>!i.naturalWidth).length}));
-      for(const name of ['ffzW','ffzX','ffzY','ffzJam','ffzBounce','ffzSpin','ffzRainbow','ffzHyper','ffzCursed','ffzArrive','ffzLeave','ffzSlide'])assert.ok(result.modifiers.includes(name),name);
+      for(const name of ['ffzW','ffzX','ffzY','ffzCursed','RainTime'])assert.ok(result.modifiers.includes(name),name);
       assert.equal(result.broken,0);assert.equal(localErrors.length,0);
       fs.mkdirSync(path.join(root,'test-results'),{recursive:true});await local.screenshot({path:path.join(root,'test-results','offline-demo.png'),omitBackground:true});
     });
     await check('localhost live source loads catalogs and joins Twitch read-only',async()=>{
       await local.goto('http://127.0.0.1:18765/overlay.html?channel=jynxzi&demo=1&debug=1');
       await local.waitForFunction(()=>globalThis.OverlayApp?.getStatus().connection==='connected'&&OverlayApp.getStatus().loaded>0,{},{timeout:45000});
-      await local.waitForFunction(()=>document.querySelectorAll('.message.preview').length>=6);
+      await local.waitForFunction(()=>document.querySelectorAll('.message.preview').length===4);
       await local.waitForFunction(()=>[...document.images].every(image=>image.complete),{},{timeout:30000});
       const state=await local.evaluate(()=>OverlayApp.getStatus());
       assert.equal(state.connection,'connected');assert.ok(state.loaded>0);assert.equal(localErrors.length,0);
+      const examples=await local.evaluate(()=>({alts:[...document.querySelectorAll('.message.preview img')].map(i=>i.alt),modifiers:[...document.querySelectorAll('.message.preview .emote-unit')].map(i=>i.dataset.modifiers)}));
+      assert.ok(examples.alts.includes('ppL'));assert.ok(examples.alts.includes('RainTime'));
+      assert.ok(examples.modifiers.some(value=>['ffzW','ffzX','ffzY','ffzCursed','RainTime'].every(name=>value.split(' ').includes(name))));
       const imageState=await local.evaluate(()=>({total:document.images.length,broken:[...document.images].filter(image=>!image.naturalWidth).map(image=>({url:image.src,alt:image.alt})),fallback:document.querySelectorAll('.emote-fallback').length}));
-      assert.ok(imageState.total>12);assert.equal(imageState.broken.length,0,JSON.stringify(imageState));assert.equal(imageState.fallback,0);
+      assert.ok(imageState.total>=6);assert.equal(imageState.broken.length,0,JSON.stringify(imageState));assert.equal(imageState.fallback,0);
       fs.writeFileSync(path.join(root,'test-results','live-status.json'),JSON.stringify(state,null,2));await local.screenshot({path:path.join(root,'test-results','preview.png'),omitBackground:true});
     });
     await check('single HTML file joins Twitch and loads public emotes without local hosting',async()=>{
       const {pathToFileURL}=require('node:url');
-      await local.goto(pathToFileURL(path.join(root,'dist','chat-jynxzi-preview.html')).href);
+      await local.goto(pathToFileURL(path.join(root,'dist','chat-jynxzi.html')).href);
       await local.waitForFunction(()=>globalThis.OverlayApp?.getStatus().connection==='connected'&&OverlayApp.getStatus().loaded>0,{},{timeout:45000});
-      await local.waitForFunction(()=>document.querySelectorAll('.message.preview').length>=6);
+      await local.waitForFunction(()=>document.querySelectorAll('.message.preview').length===4);
       const state=await local.evaluate(()=>OverlayApp.getStatus());assert.equal(state.connection,'connected');assert.ok(state.loaded>0);assert.equal(localErrors.length,0);
       fs.writeFileSync(path.join(root,'test-results','standalone-status.json'),JSON.stringify(state,null,2));
     });

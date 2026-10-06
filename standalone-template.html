@@ -196,7 +196,7 @@ globalThis.OverlayDemoBrightEmote = {"name":"Kappa","id":"25","width":25,"height
     wrapper.appendChild(stage);
     return wrapper;
   }
-  global.OverlayModifiers=Object.freeze({version:'0.2.4',Flags,builtIn,resolve,apply,installStyles,supportedMask,
+  global.OverlayModifiers=Object.freeze({version:'0.2.5',Flags,builtIn,resolve,apply,installStyles,supportedMask,
     source:'https://github.com/FrankerFaceZ/FrankerFaceZ/blob/master/src/modules/chat/emotes.js'});
 })(typeof window==='object' ? window : globalThis);
 
@@ -922,22 +922,18 @@ globalThis.OverlayDemoBrightEmote = {"name":"Kappa","id":"25","width":25,"height
     if(seeded)return;seeded=true;
     const example=globalThis.OverlayDemoEmote;
     const demoCatalog=new Map(catalog);
-    demoCatalog.set('heyy',catalog.get('heyy')||example);
-    if(globalThis.OverlayDemoBrightEmote)demoCatalog.set('Kappa',globalThis.OverlayDemoBrightEmote);
+    demoCatalog.set('ppL',catalog.get('ppL')||example);
+    if(!demoCatalog.has('RainTime')&&example)demoCatalog.set('RainTime',{...example,id:'preview-rain',name:'RainTime',zeroWidth:true});
     const old=catalog;catalog=demoCatalog;
     const rows=[
-      ['Normal → wide','heyy heyy ffzW'],
-      ['Flip → flip + wide','heyy ffzX heyy ffzY heyy ffzW ffzX'],
-      ['Jam → bounce → spin','heyy ffzJam heyy ffzBounce heyy ffzSpin'],
-      ['Rainbow → hyper → cursed',globalThis.OverlayDemoBrightEmote?'heyy ffzRainbow Kappa ffzHyper Kappa ffzCursed':'heyy ffzRainbow heyy ffzHyper heyy ffzCursed'],
-      ['Arrive → leave → slide','heyy ffzArrive heyy ffzLeave heyy ffzSlide'],
-      ['Combined effects','heyy ffzW ffzRainbow ffzBounce heyy ffzArrive ffzLeave'],
-      ['Spin + bounce + wide','heyy ffzBounce ffzSpin ffzArrive ffzLeave ffzW'],
+      ['Global 7TV emote','ppL'],
+      ['7TV overlay','ppL RainTime'],
+      ['FFZ modifier','ppL ffzCursed'],
+      ['7TV + stacked FFZ','ppL ffzW ffzX ffzY ffzCursed RainTime'],
     ];
-    const zero=[...catalog.values()].find(e=>e.zeroWidth&&e.provider==='7tv'&&['JailTime','RainTime','SnowTime'].includes(e.name));
-    if(zero)rows.push(['7TV layer + FFZ',`heyy ${zero.name} ffzW ffzRainbow`]);
-    for(const [displayName,text] of rows)paint({id:`preview-${chat.children.length}`,username:'overlay_preview',displayName,text,preview:true,badges:[],emotes:[]});
+    const previewRows=rows.map(([displayName,text])=>paint({id:`preview-${chat.children.length}`,username:'overlay_preview',displayName,text,preview:true,badges:[],emotes:[]}));
     catalog=old;
+    setTimeout(()=>{for(const row of previewRows)row.remove();},20000);
   }
   async function refresh(initial=false){
     try{

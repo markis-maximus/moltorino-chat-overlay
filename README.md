@@ -14,7 +14,7 @@ This is the easiest way. Nothing else needs to stay open besides OBS.
 4. Turn on **Local file**, then choose the renamed file.
 5. Set the width to **800** and the height to **500**.
 
-That is all. Your live chat should appear when someone sends a message. The file reads public chat only. It cannot send messages, and it does not need your Twitch password or login.
+That is all. Four example messages appear for 20 seconds, then disappear. Your live chat appears when someone sends a message. Refresh the OBS source whenever you want to see the examples again. The file reads public chat only. It cannot send messages, and it does not need your Twitch password or login.
 
 Keep the filename in this form:
 
@@ -23,10 +23,6 @@ chat-your_twitch_name.html
 ```
 
 Capital letters do not matter. Keep any underscores that are part of the Twitch name. Internet access is still needed to read Twitch chat and load emotes and badges.
-
-## See the effects before going live
-
-[Download `chat-channelname-preview.html`](https://github.com/markis-maximus/moltorino-chat-overlay/releases/latest/download/chat-channelname-preview.html), rename it the same way, and select it as an OBS local file. It shows labeled example messages along with the live chat. The examples stay on your computer and are never posted to Twitch.
 
 ## Optional setup page
 
@@ -48,9 +44,12 @@ FFmpeg by itself cannot display an HTML overlay. An FFmpeg setup needs a browser
 | `ppL ffzW` | Wide |
 | `ppL ffzX` / `ppL ffzY` | Horizontal / vertical flip |
 | `ppL ffzCursed` | Dark, high-contrast grayscale |
-| `ppL RainTime ffzW` | 7TV layer and base widen together, when RainTime is enabled |
+| `ppL RainTime` | Global 7TV overlay on a global 7TV emote |
+| `ppL ffzW ffzX ffzY ffzCursed RainTime` | Width, both flips, Cursed, and a 7TV overlay together |
 
-Any recognized Twitch, FFZ, BTTV or 7TV base emote can be modified. `ppL` is a default global 7TV emote. For another channel, use an emote enabled there. A chain attaches to the preceding emote; intervening ordinary text breaks it. Repeating the same effect does not multiply it. Arrive+Leave forms a six-second sequence. In v0.2.0, Spin, Shake, Jam, Bounce, and arrival/departure have independent nested animation stages. `WW ffzBounce ffzSpin ffzArrive ffzLeave ffzW` therefore spins, bounces, transitions, and stays wide. Slide also composes with Spin. This deliberately extends FFZ's shared CSS transform behavior; exact Moltorino frame timing is unverified. Detailed provenance and rules are in [research/ffz.md](research/ffz.md).
+The opening examples use global emotes so they work with every Twitch channel. `ppL` and `RainTime` are currently global 7TV emotes. `ffzW`, `ffzX`, `ffzY`, and `ffzCursed` are global FFZ modifiers. `JailTime` is not currently in 7TV's global set, so a channel must enable it before it can appear there.
+
+Any recognized Twitch, FFZ, BTTV or 7TV base emote can be modified. A chain attaches to the preceding emote; intervening ordinary text breaks it. Repeating the same effect does not multiply it. Arrive+Leave forms a six-second sequence. In v0.2.0, Spin, Shake, Jam, Bounce, and arrival/departure have independent nested animation stages. `WW ffzBounce ffzSpin ffzArrive ffzLeave ffzW` therefore spins, bounces, transitions, and stays wide. Slide also composes with Spin. This deliberately extends FFZ's shared CSS transform behavior; exact Moltorino frame timing is unverified. Detailed provenance and rules are in [research/ffz.md](research/ffz.md).
 
 ## Username paints and badges
 

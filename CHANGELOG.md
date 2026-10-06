@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.5 — 2026-10-06
+
+- Use one standalone download for both preview and live chat.
+- Show four short opening examples built from global `ppL`, `RainTime`, and FFZ modifiers, then remove them automatically after 20 seconds.
+- Remove the separate preview download.
+
 ## 0.2.4 — 2026-10-06
 
 - Let a standalone overlay get its Twitch channel from its filename. Rename `chat-channelname.html` to `chat-yourname.html` and load it as a local browser source.

@@ -12,7 +12,7 @@ const root=path.resolve(__dirname,'..'),out=path.join(root,'test-results','chat-
   await page.goto(pathToFileURL(out).href+'?offline=1');
   const state=await page.evaluate(()=>OverlayApp.getStatus());
   assert.equal(state.channel,'my_channel');
-  assert.equal(state.version,'0.2.4');
+  assert.equal(state.version,'0.2.5');
   console.log('Renamed standalone file selected channel:',state.channel);
  }finally{await browser.close();fs.rmSync(out,{force:true});}
 })().catch(error=>{console.error(error);process.exitCode=1;});
