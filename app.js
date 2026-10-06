@@ -61,7 +61,7 @@
     ];
     const previewRows=rows.map(([displayName,text])=>paint({id:`preview-${chat.children.length}`,username:'overlay_preview',displayName,text,preview:true,badges:[],emotes:[]}));
     catalog=old;
-    setTimeout(()=>{for(const row of previewRows)row.remove();},20000);
+    setTimeout(()=>{for(const row of previewRows)row.remove();},8000);
   }
   async function refresh(initial=false){
     try{

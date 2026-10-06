@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.7 — 2026-10-06
+
+- Shorten the four opening preview messages from 20 seconds to 8 seconds.
+
 ## 0.2.6 — 2026-10-06
 
 - Read renamed channels from OBS Browser Source's internal `http://absolute/...` local-file address as well as a normal `file://` address.
