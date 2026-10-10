@@ -25,32 +25,32 @@ test('cosmetic and entitlement events attach to Twitch ID and delete cleanly',()
  service.ingest('cosmetic.delete',{object:{id:badge.id}});assert.equal(service.profile(msg).badges.length,0);service.close();
 });
 test('Moltorino assignment, active choice, hidden groups and ordering are honored',()=>{
- const service=cosmetics.create();const registry={badges:[{id:'supporter',images:{'3x':'https://cdn.test/supporter'},tooltip:'Supporter',priority:1}],users:{42:{badges:['supporter'],activeBadge:'supporter',order:['m','tv','7'],hidden:['ts']}},layout:{defaultOrder:['ta','ts','tv','m','7']}};
+ const service=cosmetics.create();const registry={badges:[{id:'supporter',images:{'1x':'https://cdn.test/supporter/1x','3x':'https://cdn.test/supporter'},tooltip:'Supporter',priority:1}],users:{42:{badges:['supporter'],activeBadge:'supporter',order:['m','ta','7'],hidden:['ts']}},layout:{defaultOrder:['ta','ts','tv','m','7']}};
  service.setRegistry(registry);const p=service.profile({userId:'42',badges:[{set:'subscriber',version:'1'},{set:'vip',version:'1'}]},new Map([['subscriber/1','https://cdn.test/sub'],['vip/1','https://cdn.test/vip']]));
- assert.equal(p.badges.length,2);assert.equal(p.badges[0].source,'m');assert.equal(p.badges[1].source,'tv');registry.users[42].activeBadge=null;service.setRegistry(registry);assert.equal(service.profile({userId:'42',badges:[]}).badges.length,0);service.close();
+ assert.equal(p.badges.length,2);assert.equal(p.badges[0].source,'m');assert.equal(p.badges[1].source,'ta');registry.users[42].activeBadge=null;service.setRegistry(registry);assert.equal(service.profile({userId:'42',badges:[]}).badges.length,0);service.close();
 });
 test('entitlement before cosmetic becomes visible once the definition arrives',()=>{
  const service=cosmetics.create();service.ingest('entitlement.create',ent('PAINT',paint.id));assert.equal(service.profile({userId:'42'}).paint,null);service.remember('PAINT',paint);assert.equal(service.profile({userId:'42'}).paint.id,paint.id);service.close();
 });
 
 test('Homies assignments use Twitch IDs and preserve animated asset URLs safely',()=>{
- const parsed=cosmetics.homiesBadges({badges:[{badgeId:'custom',userId:'42',tooltip:'Custom Badge',image3:'https://cdn.chatterinohomies.com/test/72.webp'},{badgeId:'unsafe',userId:'43',image3:'javascript:alert(1)'}]});
+ const parsed=cosmetics.homiesBadges({badges:[{badgeId:'custom',userId:'42',tooltip:'Custom Badge',image1:'https://cdn.chatterinohomies.com/test/18.webp',image3:'https://cdn.chatterinohomies.com/test/72.webp'},{badgeId:'unsafe',userId:'43',image3:'javascript:alert(1)'}]});
  assert.equal(parsed.get('42')[0].source,'hc');assert.match(parsed.get('42')[0].url,/72\.webp$/);assert.equal(parsed.has('43'),false);
  assert.throws(()=>cosmetics.homiesBadges({error:'unavailable'}));
 });
 
-test('Homies refresh retains data during outages and FFZ bot replacement preserves moderator color',async()=>{
+test('Homies refresh retains data during outages and FFZ bot coexists with green moderator role',async()=>{
  let fail=false;
  const context=vm.createContext({URL,Map,Set,Date,Promise,setTimeout,clearTimeout,AbortController,fetch:async endpoint=>{
   let data={schemaVersion:2,badges:[],users:{}};
   if(endpoint.includes('frankerfacez'))data={badges:[{id:2,title:'Bot',replaces:'moderator',color:'#595959',urls:{4:'https://cdn.test/bot'}}],users:{2:['42']}};
-  if(endpoint.includes('chatterinohomies')){if(fail)throw Error('offline');data={badges:[{badgeId:'custom',userId:'42',image3:'https://cdn.test/animated.webp'}]};}
+  if(endpoint.includes('chatterinohomies')){if(fail)throw Error('offline');data={badges:[{badgeId:'custom',userId:'42',image1:'https://cdn.test/small.webp',image3:'https://cdn.test/animated.webp'}]};}
   return {ok:true,json:async()=>data};
  }});
  vm.runInContext(fs.readFileSync(path.join(root,'cosmetics.js'),'utf8'),context);const service=context.OverlayCosmetics.create();
  await service.refresh();const map=new Map([['moderator/1',{url:'https://cdn.test/mod',color:'#34ae0a'}]]);
  const p=service.profile({userId:'42',badges:[{set:'moderator',version:'1'}]},map);
- assert.equal(p.badges.filter(b=>b.source==='ta').length,1);assert.equal(p.badges.find(b=>b.id==='2').color,'#34ae0a');assert.ok(p.badges.some(b=>b.source==='hc'));
+ assert.equal(p.badges.filter(b=>b.source==='ta').length,1);assert.equal(p.badges.find(b=>b.source==='ta').color,'#34ae0a');assert.equal(p.badges.find(b=>b.id==='2').color,'#595959');assert.equal(p.badges.find(b=>b.id==='2').source,'ff');assert.ok(p.badges.some(b=>b.source==='hc'));
  assert.equal(service.profile({userId:'42',badges:[]}).badges.find(b=>b.id==='2').color,'#595959');
  fail=true;await service.refresh();assert.ok(service.profile({userId:'42'}).badges.some(b=>b.source==='hc'));service.close();
 });

@@ -24,9 +24,13 @@ function run(file,extraEnv={}){
 }
 
 try{
+  await run('build.mjs');
   await ready();
   await run('tests/browser-smoke.cjs');
   await run('tests/setup-controls.cjs',{OVERLAY_TEST_PORT:String(port)});
+  await run('tests/moltorino-browser.cjs',{OVERLAY_TEST_PORT:String(port)});
+  await run('tests/cosmetics-rendering.cjs',{OVERLAY_TEST_PORT:String(port)});
+  await run('tests/review-regressions.cjs');
   await run('tests/filename-channel.cjs');
   await run('tests/stacking-regression.cjs');
   await run('tests/layout-regression.cjs',{OVERLAY_TEST_URL:base+'/overlay.html?channel=test_channel&offline=1&test=1'});

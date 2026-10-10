@@ -1,5 +1,44 @@
 # Verification — 2026-10-05
 
+## Eight review findings repaired — 2026-10-10 (unreleased)
+
+All eight findings from the [second review](research/review-20261010.md) now have local fixes and regression checks. The [repair report](research/repairs-20261010.md) records each change and its validation. Both portable HTML files and the standalone template were rebuilt. Nothing was committed, pushed, or released.
+
+- **110 Node tests pass**, including 14 new tests for supported USERNOTICE content, Shared Chat notice rules, malformed provider isolation/cache retention, socket timeouts, stale callbacks, synchronous connection failures, and shutdown.
+- **The full offline browser suite passes in Chromium, Firefox, and WebKit on Windows.** The added repair checks exercise both source scripts and the rebuilt portable `file://` download: late Slide layer dimensions and preserved animation clocks, static fallback and double image failure, individual badge preservation/reordering/failure isolation, same-ID radial paint revisions, and overlapping app refreshes. Parsed resubscription content also reaches the production app with its emote and subscription flag.
+- **Controlled connection tests deliberately omit browser close events.** Twitch handshake/join deadlines, idle recovery and keepalive reset; BetterTTV handshake/renewal; and 7TV hello timeout reconnect themselves. This verifies application behavior without claiming a physical network outage was reproduced.
+- **Live renamed portable file:** an isolated Chromium session connected anonymously to Jynxzi, loaded 984 emote aliases, connected to 7TV, and loaded 348 Moltorino user preference records at 2026-10-10T06:58:00Z. FFZ channel data and BTTV channel emotes returned HTTP 404; those failures did not block the other providers. No user paint/badge assignment was observed in this short check. No public chat messages or moderation commands were sent.
+
+Run `npm test` and `npm run test:browser`. Set `OVERLAY_BROWSER` to `firefox` or `webkit` to repeat the full browser suite in another installed engine. The repair-specific browser cases also run with `node tests/review-regressions.cjs --assert` after `npm run build`.
+
+Ignored local evidence: `test-results/repairs-node.txt`, `repairs-{chromium,firefox,webkit}.txt`, `repairs-20261010-{chromium,firefox,webkit}.json`, `repairs-before.txt`, and `repairs-live-file.json`. Actual OBS, Safari, native Moltorino rendering, macOS/Linux execution and physical network interruption were not tested. No existing desktop app or browser session was controlled.
+
+## Local follow-up — 2026-10-09 (unreleased)
+
+The previously identified follow-up gaps now have local fixes and comparison cases. Registry freshness, per-field 7TV updates, delayed cosmetic definitions, category-level assignments, duplicate Homies assignments, paint geometry, additional badge providers, and Shared Chat source badges are covered. See [the source report](research/moltorino-semantics.md#local-follow-up--2026-10-09) for exact behavior and primary-source links.
+
+- **96 Node tests pass**, including 24 additional tests since the initial source audit. Three new definition-race tests failed before their fix and pass afterward.
+- **The full offline browser suite passes in Chromium, Firefox and WebKit on Windows.** It covers the existing setup, filename channel detection, modifier stacking and message-history regressions; eight mapping/display comparisons in both modes; and new provider rendering, Shared Chat, single-stop color, URL stretch, measured radial geometry, forty gradient stops and eight shadows in both modes. The modes are localhost and portable `file://`.
+- **Live public-provider check:** Chromium 153.0.8010.12 loaded five registries directly from `file://` and decoded a representative real asset from each: Chatterino (4,601 assigned users), FFZ:AP (125), Bluzyrino (99), Homies supporter (947) and Homies staff (10). This was checked at 2026-10-09T20:30:53Z; assignments and availability can change. No proxy, login or server was used.
+- **Artifact correction:** the tracked Jynxzi example still contained version 0.2.6. The build now regenerates it alongside the generic download and template, and browser tests rebuild before testing. Both portable artifacts now contain the current source.
+- **BetterTTV:** deterministic tests verify `join_channel`, incoming `lookup_user`, order/visibility and shutdown. This follow-up did not observe a real user's BetterTTV badge announcement. Native client settings, exact Qt rasterization, OBS, and actual macOS/Linux execution were not tested. WebKit on Windows is not the Safari application.
+
+Run `npm test` and `npm run test:browser`. For another engine, first install with `npx playwright install firefox webkit`, then set `OVERLAY_BROWSER` to `firefox` or `webkit` and rerun the browser command. Run `node tests/public-badge-providers.cjs` separately for the opt-in live check.
+
+Local reports are `test-results/hardening-node.txt`, `hardening-{chromium,firefox,webkit}.txt`, `cosmetics-rendering-{chromium,firefox,webkit}.json`, and `public-badge-providers.json`. Mapping screenshots are `moltorino-{engine}-{mode}.png`. These reports are ignored by Git. Existing browser/client sessions were not controlled. Nothing was committed, pushed or released.
+
+## Local source audit — 2026-10-08 (unreleased)
+
+The [Moltorino semantics report](research/moltorino-semantics.md) pins public native source and documents corrections to Twitch category mapping, Moltorino badge selection, layout normalization, global FFZ role separation, and decorations handling. Its rules supersede the historical green bot replacement described below.
+
+The initial comparison run had 25 failures among 42 new cases; subsequent checks also reproduced global FFZ role replacement and invalid badge-definition selection before those corrections. Final coverage includes 50 new semantics tests within 72 passing Node tests, plus eight rendered comparisons in each of localhost and standalone Chromium modes. The full existing offline browser suite also passes. This run is local Windows validation; macOS/Linux CI was not triggered and the native executable was not exercised.
+
+A source-derived selection audit of public bundle 910 found 23 disagreements across 337 user records before the fix and zero after. Nine definitions and four representative user records are retained as deterministic fixtures. `decorations` was absent from this snapshot, so its false/true/missing/non-Boolean branches use synthetic inputs grounded in native code.
+
+Local reports: `test-results/moltorino-snapshot-audit.json`, `test-results/moltorino-browser.json`, and `test-results/moltorino-localhost.png` / `moltorino-standalone.png`. The portable template and `dist/chat-channelname.html` were rebuilt with the corrected rules and source-license attribution. Nothing was committed, pushed or released as part of this audit.
+
+## Historical checks
+
 Verified from local source files, public provider APIs, and newly launched headless Chromium. No existing desktop browser session or native application was controlled. No chat messages or moderation actions were sent.
 
 - Installed Moltorino identity: M15.5.2, source commit `e0966a622a3475dbaada167603797638e77e8a18`.

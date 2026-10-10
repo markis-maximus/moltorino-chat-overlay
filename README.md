@@ -26,6 +26,8 @@ This method needs no installation and nothing else needs to stay open besides yo
 
 Four labeled examples appear for eight seconds and then clear themselves. Live messages appear as people chat. Refresh the browser source to show the examples again.
 
+User-written announcements and subscription messages appear too, with their emotes and badges. Payment notifications without a message are omitted. In Shared Chat, announcements from other channels appear; subscription notifications from other channels are omitted, following Moltorino's message rules.
+
 Keep the filename in this form:
 
 ```text
@@ -121,17 +123,25 @@ This renderer composes effects that FFZ's shared CSS transforms can otherwise re
 
 ## Username paints and badges
 
-The overlay supports Twitch badges, 7TV username paints and badges, Moltorino badges, Chatterino Homies animated badges, FFZ user badges, and channel-specific FFZ moderator or VIP badge images. Custom moderator badges retain the normal green moderator background.
+The overlay supports Twitch badges, 7TV username paints and badges, Moltorino, Chatterino, Bluzyrino, FFZ, FFZ:AP, and Chatterino Homies custom, supporter, and staff badges. BetterTTV badges arrive through its live channel updates, so they may appear after the chatter's client announces them. Channel-specific FFZ moderator or VIP images are supported too; custom moderator badges retain the normal green background.
+
+For these supported badges, the overlay follows Moltorino's public badge choice, order, and visibility preferences. VIP counts as a Twitch role. A global FFZ bot badge appears separately from the moderator badge. Moltorino's decorations preference controls Homies custom badges; use **Show username paints** to turn paints on or off in this overlay.
 
 Paints can contain colors, gradients, repeating gradients, image backgrounds, and shadows. Cosmetics load asynchronously, so a plain name or missing extra badge can briefly appear while a provider responds. Visible cosmetics update without restarting active emote animations.
 
+Updating one badge keeps the other badge images in place. If an image fails, only that badge is hidden; it can be retried on a later update after 30 seconds. FFZ emotes try their static image when an animated image fails.
+
+Shared Chat messages show the originating channel's picture and its moderator or VIP roles. A small Shared Chat symbol appears while the channel picture loads. These source roles use Twitch's standard images.
+
 History trimming measures actual message rows. Adding more FFZ motions or 7TV layers to one emote does not consume extra chat rows by itself. Wide emotes and text that truly wraps can still need more room.
 
-See [research/cosmetics.md](research/cosmetics.md) for verified providers and current limitations.
+See [research/cosmetics.md](research/cosmetics.md) for verified providers and current limitations, or the [Moltorino source comparison](research/moltorino-semantics.md) for exact rules and test cases.
 
 ## Future modifiers
 
 Public emote catalogs reload every five minutes. The overlay reads FFZ's `modifier_flags` and `modifier_prefix`, including effect sets outside `default_sets`. New modifier names that combine already-supported effects can work without a code update. Unknown effect bits stay visible as text instead of silently disappearing. A brand-new animation type still requires renderer support.
+
+If a provider stops responding or sends unusable data, the overlay keeps its last valid data for that session while other providers continue loading. Overlapping refreshes keep the newer completed result. Chat connections retry automatically when they fail or stop responding.
 
 A previously downloaded portable HTML file contains a snapshot of the overlay code. Download a new release when the renderer itself is updated.
 
@@ -139,7 +149,7 @@ A previously downloaded portable HTML file contains a snapshot of the overlay co
 
 The twelve listed modifier names were confirmed in Moltorino M15.5.2 and FFZ's global API. Animation definitions come from FFZ's official source. Tests cover modifier parsing, rendered dimensions, animation progress, stacked 7TV layers, Unicode chat offsets, provider loading, reconnects, moderation events, safe text rendering, every setup-page option, and generated portable files.
 
-Automated browser checks use Chromium and run on Windows, macOS, and Linux. Other browser-source engines using modern web standards are expected to work, but have not all been independently tested.
+The current local checks pass in Chromium, Firefox, and WebKit on Windows. The project's GitHub Actions configuration also covers Chromium on Windows, macOS, and Linux, but those remote jobs have not been run for these local changes. WebKit testing is not a test of the Safari app, and OBS's embedded browser and other streaming tools can differ.
 
 This remains a focused Twitch overlay rather than a full ChatIS clone. It does not implement non-Twitch chat platforms or 7TV personal emote entitlements. FFZ effects modify the complete composited emote and layer stack.
 
@@ -156,8 +166,10 @@ node build.mjs --channel={channelname}
 node server.mjs
 ```
 
-Build output goes to `dist/`. There are no runtime npm dependencies; Playwright is used only for development tests. Windows, macOS, and Linux run the unit and offline browser suites in GitHub Actions. Provider schemas and read-only connection evidence are in [research/providers.md](research/providers.md).
+Build output goes to `dist/`. The build refreshes both `chat-channelname.html` and the `chat-jynxzi.html` example. Browser tests rebuild first, so they check the current downloadable files. There are no runtime npm dependencies; Playwright is used only for development tests.
+
+For additional browser engines, install them with `npx playwright install firefox webkit`, then set `OVERLAY_BROWSER` to `firefox` or `webkit` before running `npm run test:browser` (PowerShell example: `$env:OVERLAY_BROWSER='firefox'`). Unset the variable to return to Chromium. `node tests/public-badge-providers.cjs` separately checks live public badge services and images; it needs internet access and can fail during a provider outage. See [VERIFICATION.md](VERIFICATION.md) for the checks actually completed and their limits.
 
 Please report reproducible problems through [GitHub Issues](https://github.com/markis-maximus/moltorino-chat-overlay/issues) with the channel, exact message text, browser-source dimensions, and whether you used localhost or a standalone HTML file. Never include Twitch OAuth tokens or private account data.
 
-Original overlay code is MIT licensed. Adapted FFZ keyframes are Apache-2.0 licensed; attribution and license text are included in every standalone file. Emote images retain their owners' rights.
+Original overlay code is MIT licensed. Adapted FFZ keyframes are Apache-2.0 licensed; Moltorino/Chatterino badge grouping and layout rules are MIT licensed. Attribution and license text are included in every standalone file. Emote images retain their owners' rights.

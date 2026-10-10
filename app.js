@@ -14,6 +14,7 @@
   document.documentElement.style.setProperty('--font-size',config.fontSize+'px');
   document.documentElement.style.setProperty('--emote-size',config.emoteSize+'px');
   let catalog=new Map(),badgeMap=new Map(),connection=null,seeded=false,loading=true,pending=[];
+  let refreshSequence=0,appliedRefresh=0;
   const state={version:OverlayModifiers.version,channel:config.channel,connection:'starting',providers:[],loaded:0,lastMessageAt:null,config};
   const history=[];
   const rowMessages=new WeakMap();let updateFrame=null;
@@ -31,6 +32,7 @@
     if(chat.children.length>=config.maxMessages)chat.firstElementChild?.remove();
     const row=OverlayRenderer.render(message,catalog,{...config,badgeMap,cosmeticsProfile:cosmetics?.profile(message,badgeMap)});rowMessages.set(row,message);chat.append(row);
     if(message.userId)cosmetics?.ensureUser(message.userId);
+    if(message.sourceRoomId&&message.sourceRoomId!==message.roomId)cosmetics?.ensureSharedRoom(message.sourceRoomId);
     // scrollHeight includes transformed emote pixels outside their line box.
     // Removing older rows cannot fix overflow below the newest row; measure
     // actual row layout instead so an animation cannot empty the history.
@@ -64,8 +66,11 @@
     setTimeout(()=>{for(const row of previewRows)row.remove();},8000);
   }
   async function refresh(initial=false){
+    const sequence=++refreshSequence;
     try{
       const next=await OverlayProviders.load(config.channel,setStatus);
+      if(sequence<appliedRefresh)return;
+      appliedRefresh=sequence;
       // Keep existing catalogs during temporary provider failure; load() merges its own provider cache.
       if(next.emotes.size)catalog=next.emotes;if(next.badges.size)badgeMap=next.badges;
       state.loaded=catalog.size;

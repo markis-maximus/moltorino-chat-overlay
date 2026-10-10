@@ -1,0 +1,209 @@
+{
+  "provenance": {
+    "endpoint": "https://api.moltorino.com/v2/badges",
+    "sourceCommit": "2c98aaf8004842e7a25ff8aa07a362f9056c51b3",
+    "note": "Four unchanged public preference records and all nine badge definitions, reduced from 337 users. Expected selections derive from pinned native source."
+  },
+  "registry": {
+    "schemaVersion": 2,
+    "generation": "074cdd7e442fbda2",
+    "bundleVersion": 910,
+    "generatedAt": "2026-10-09T03:17:53.9760000Z",
+    "layout": {
+      "schemaVersion": 1,
+      "defaultOrder": [
+        "ta",
+        "ts",
+        "tv",
+        "tp",
+        "c",
+        "ff",
+        "fa",
+        "bt",
+        "bl",
+        "m",
+        "7",
+        "hc",
+        "hs"
+      ]
+    },
+    "badges": [
+      {
+        "id": "top_donor_alt",
+        "tooltip": "Moltorino Top Donor Alt",
+        "description": "Given to current and former Moltorino top donors.",
+        "listed": true,
+        "priority": 9,
+        "assetVersion": 1,
+        "images": {
+          "1x": "https://api.moltorino.com/badges/assets/top_donor_alt/1x.webp?asset=1",
+          "2x": "https://api.moltorino.com/badges/assets/top_donor_alt/2x.webp?asset=1",
+          "3x": "https://api.moltorino.com/badges/assets/top_donor_alt/3x.webp?asset=1",
+          "4x": "https://api.moltorino.com/badges/assets/top_donor_alt/4x.webp?asset=1"
+        }
+      },
+      {
+        "id": "developer",
+        "tooltip": "Moltorino Developer",
+        "description": "Given to people who help build and maintain Moltorino.",
+        "listed": false,
+        "priority": 10,
+        "assetVersion": 1,
+        "images": {
+          "1x": "https://api.moltorino.com/badges/assets/developer/1x.webp?asset=1",
+          "2x": "https://api.moltorino.com/badges/assets/developer/2x.webp?asset=1",
+          "3x": "https://api.moltorino.com/badges/assets/developer/3x.webp?asset=1",
+          "4x": ""
+        }
+      },
+      {
+        "id": "top_donor",
+        "tooltip": "Moltorino Top Donor",
+        "description": "Given to current and former Moltorino top donors.",
+        "listed": true,
+        "priority": 50,
+        "assetVersion": 1,
+        "images": {
+          "1x": "https://api.moltorino.com/badges/assets/top_donor/1x.webp?asset=1",
+          "2x": "https://api.moltorino.com/badges/assets/top_donor/2x.webp?asset=1",
+          "3x": "https://api.moltorino.com/badges/assets/top_donor/3x.webp?asset=1",
+          "4x": ""
+        }
+      },
+      {
+        "id": "founder",
+        "tooltip": "Moltorino Founder",
+        "description": "Reserved for the people who helped Moltorino get started.",
+        "listed": true,
+        "priority": 75,
+        "assetVersion": 1,
+        "images": {
+          "1x": "https://api.moltorino.com/badges/assets/founder/1x.webp?asset=1",
+          "2x": "https://api.moltorino.com/badges/assets/founder/2x.webp?asset=1",
+          "3x": "https://api.moltorino.com/badges/assets/founder/3x.webp?asset=1",
+          "4x": ""
+        }
+      },
+      {
+        "id": "supporter",
+        "tooltip": "Moltorino Supporter",
+        "description": "Given for supporting with $5 or more.",
+        "listed": true,
+        "priority": 100,
+        "assetVersion": 1,
+        "images": {
+          "1x": "https://api.moltorino.com/badges/assets/supporter/1x.webp?asset=1",
+          "2x": "https://api.moltorino.com/badges/assets/supporter/2x.webp?asset=1",
+          "3x": "https://api.moltorino.com/badges/assets/supporter/3x.webp?asset=1",
+          "4x": ""
+        }
+      },
+      {
+        "id": "supporter_plus",
+        "tooltip": "Moltorino Supporter+",
+        "description": "Given for supporting with $10 or more.",
+        "listed": true,
+        "priority": 200,
+        "assetVersion": 6,
+        "images": {
+          "1x": "https://api.moltorino.com/badges/assets/supporter_plus/1x.webp?asset=6",
+          "2x": "https://api.moltorino.com/badges/assets/supporter_plus/2x.webp?asset=6",
+          "3x": "https://api.moltorino.com/badges/assets/supporter_plus/3x.webp?asset=6",
+          "4x": "https://api.moltorino.com/badges/assets/supporter_plus/4x.webp?asset=6"
+        }
+      },
+      {
+        "id": "supporter_plus_alt",
+        "tooltip": "Moltorino Supporter+ Alt",
+        "description": "Given for supporting with $10 or more.",
+        "listed": true,
+        "priority": 200,
+        "assetVersion": 5,
+        "images": {
+          "1x": "https://api.moltorino.com/badges/assets/supporter_plus_alt/1x.webp?asset=5",
+          "2x": "https://api.moltorino.com/badges/assets/supporter_plus_alt/2x.webp?asset=5",
+          "3x": "https://api.moltorino.com/badges/assets/supporter_plus_alt/3x.webp?asset=5",
+          "4x": "https://api.moltorino.com/badges/assets/supporter_plus_alt/4x.webp?asset=5"
+        }
+      },
+      {
+        "id": "supporter_plus_plus",
+        "tooltip": "Moltorino Supporter++",
+        "description": "Given for supporting with $25 or more.",
+        "listed": true,
+        "priority": 200,
+        "assetVersion": 5,
+        "images": {
+          "1x": "https://api.moltorino.com/badges/assets/supporter_plus_plus/1x.webp?asset=5",
+          "2x": "https://api.moltorino.com/badges/assets/supporter_plus_plus/2x.webp?asset=5",
+          "3x": "https://api.moltorino.com/badges/assets/supporter_plus_plus/3x.webp?asset=5",
+          "4x": "https://api.moltorino.com/badges/assets/supporter_plus_plus/4x.webp?asset=5"
+        }
+      },
+      {
+        "id": "supporter_plus_plus_alt",
+        "tooltip": "Moltorino Supporter++ Alt",
+        "description": "Given for supporting with $25 or more.",
+        "listed": true,
+        "priority": 200,
+        "assetVersion": 6,
+        "images": {
+          "1x": "https://api.moltorino.com/badges/assets/supporter_plus_plus_alt/1x.webp?asset=6",
+          "2x": "https://api.moltorino.com/badges/assets/supporter_plus_plus_alt/2x.webp?asset=6",
+          "3x": "https://api.moltorino.com/badges/assets/supporter_plus_plus_alt/3x.webp?asset=6",
+          "4x": "https://api.moltorino.com/badges/assets/supporter_plus_plus_alt/4x.webp?asset=6"
+        }
+      }
+    ],
+    "users": {
+      "25506506": {
+        "badges": [
+          "supporter",
+          "supporter_plus",
+          "supporter_plus_alt",
+          "supporter_plus_plus",
+          "supporter_plus_plus_alt"
+        ]
+      },
+      "40254420": {
+        "badges": [
+          "founder",
+          "supporter"
+        ]
+      },
+      "44317576": {
+        "badges": [
+          "supporter",
+          "supporter_plus",
+          "supporter_plus_alt",
+          "supporter_plus_plus",
+          "supporter_plus_plus_alt"
+        ],
+        "activeBadge": null
+      },
+      "506954718": {
+        "badges": [
+          "top_donor_alt",
+          "developer",
+          "top_donor",
+          "founder",
+          "supporter",
+          "supporter_plus",
+          "supporter_plus_alt",
+          "supporter_plus_plus",
+          "supporter_plus_plus_alt"
+        ],
+        "activeBadge": "top_donor_alt",
+        "hidden": [
+          "tv"
+        ]
+      }
+    }
+  },
+  "expectedSelections": {
+    "25506506": "supporter",
+    "40254420": "founder",
+    "44317576": null,
+    "506954718": "top_donor_alt"
+  }
+}

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.mjs",
     "build": "node build.mjs",
-    "test": "node --test tests/renderer.test.cjs tests/cosmetics.test.cjs transport.test.cjs",
+    "test": "node --test tests/renderer.test.cjs tests/cosmetics.test.cjs tests/moltorino-semantics.test.cjs tests/cosmetics-hardening.test.cjs tests/badge-providers.test.cjs tests/shared-chat.test.cjs tests/repair-findings.test.cjs transport.test.cjs",
     "test:browser": "node tests/run-browser-tests.mjs"
   },
   "engines": {"node": ">=18"},

@@ -75,12 +75,18 @@
   }
 
   function toMessage(irc) {
-    if (!irc || irc.command !== 'PRIVMSG' || irc.params.length < 2) return null;
+    if (!irc || !['PRIVMSG','USERNOTICE'].includes(irc.command) || irc.params.length < 2) return null;
     const tags = irc.tags;
+    const notice=irc.command==='USERNOTICE';
+    const noticeType=notice?(tags['msg-id']==='sharedchatnotice'?tags['source-msg-id']:tags['msg-id']):'';
+    if(notice){
+      const shared=tags['msg-id']==='sharedchatnotice'||(tags['source-room-id']&&tags['source-room-id']!==tags['room-id']);
+      if(!['sub','subgift','resub','bitsbadgetier','ritual','announcement','viewermilestone','modiversary','socialsharingbadge'].includes(noticeType)||!irc.params[1]||(shared&&noticeType!=='announcement'))return null;
+    }
     let text = irc.params[1];
     const isAction = text.startsWith('\x01ACTION ') && text.endsWith('\x01');
     if (isAction) text = text.slice(8, -1);
-    const username = irc.prefix.split('!')[0] || tags.login || '';
+    const username = notice?(tags.login||String(tags['display-name']||'').toLowerCase()):(irc.prefix.split('!')[0] || tags.login || '');
     const sent = Number(tags['tmi-sent-ts']);
     return {
       id: tags.id || '',
@@ -89,6 +95,9 @@
       displayName: tags['display-name'] || username,
       username,
       userId: tags['user-id'] || '',
+      roomId: tags['room-id'] || '',
+      sourceRoomId: /^\d{1,32}$/.test(tags['source-room-id']||'')?tags['source-room-id']:'',
+      sourceBadges: String(tags['source-badges']||'').split(',').filter(Boolean).map(value=>{const [set,version='']=value.split('/');return {set,version};}),
       color: /^#[\da-f]{6}$/i.test(tags.color || '') ? tags.color : '',
       badges: String(tags.badges || '').split(',').filter(Boolean).map(value => {
         const [set, version = ''] = value.split('/');
@@ -96,6 +105,7 @@
       }),
       emotes: parseEmotes(tags.emotes, Array.from(text).length),
       isAction,
+      noticeType,isSubscription:notice&&['sub','subgift','resub'].includes(noticeType),
       timestamp: Number.isFinite(sent) && sent > 0 ? sent : Date.now(),
       tags
     };
@@ -128,6 +138,16 @@
       socket = current;
       let joined = false;
       let pending = '';
+      function retire(){
+        if(stopped||socket!==current)return;
+        clearTimeout(watchdog);watchdog=null;socket=null;current.onclose=null;
+        try{current.close();}catch{}
+        schedule();
+      }
+      function arm(ms,message){clearTimeout(watchdog);watchdog=setTimeout(()=>{if(socket!==current||stopped)return;status('error',message);retire();},ms);}
+      // Deadline includes the WebSocket handshake. Quiet channels still receive
+      // server PING traffic; allow six minutes without inbound protocol data.
+      arm(20000,'Chat connection timed out. Retrying…');
       function sendProtocol(text) {
         if (current.readyState === 1) current.send(text + '\r\n');
       }
@@ -137,12 +157,13 @@
         sendProtocol('PASS SCHMOOPIIE');
         sendProtocol('NICK ' + nick);
         sendProtocol('JOIN #' + name);
-        watchdog = setTimeout(() => { if (!joined) current.close(); }, 20000);
+        arm(20000,'Joining chat timed out. Retrying…');
       };
       current.onmessage = event => {
         if (stopped || current !== socket || typeof event.data !== 'string') return;
+        if(joined)arm(360000,'Chat stopped responding. Retrying…');
         pending += event.data;
-        if (pending.length > 1024 * 1024) { pending = ''; current.close(); return; }
+        if (pending.length > 1024 * 1024) { pending = ''; retire(); return; }
         const lines = pending.split('\n');
         pending = lines.pop();
         for (const line of lines) {
@@ -151,16 +172,15 @@
           if (irc.command === 'PING') {
             sendProtocol('PONG :' + (irc.params[0] || 'tmi.twitch.tv'));
           } else if (irc.command === 'RECONNECT') {
-            current.close();
+            retire();break;
           } else if (irc.command === 'ROOMSTATE' || irc.command === '366') {
             if (!joined) {
               joined = true;
               retry = 0;
-              clearTimeout(watchdog);
-              watchdog = null;
+              arm(360000,'Chat stopped responding. Retrying…');
               status('connected', 'Reading #' + name);
             }
-          } else if (irc.command === 'PRIVMSG') {
+          } else if (irc.command === 'PRIVMSG'||irc.command === 'USERNOTICE') {
             const message = toMessage(irc);
             if (!message || message.channel !== name) continue;
             if (message.id && seen.has(message.id)) continue;
@@ -183,16 +203,11 @@
         }
       };
       current.onerror = () => {
+        if(stopped||socket!==current)return;
         status('error', 'Unable to reach Twitch chat. Retrying…');
-        current.close();
+        retire();
       };
-      current.onclose = () => {
-        if (socket !== current) return;
-        clearTimeout(watchdog);
-        watchdog = null;
-        socket = null;
-        schedule();
-      };
+      current.onclose = retire;
     }
     open();
     return {

@@ -21,14 +21,14 @@ const root=path.resolve(__dirname,'..');
    }
    await page.locator('[data-id="regression-100135110"] .badge[data-badge-id="2"]').waitFor({timeout:30000});
    const checks=await page.evaluate(()=>{
-    const rows=['732707575','100135110'].map(id=>{const row=document.querySelector(`[data-id="regression-${id}"]`);const img=row.querySelector(id==='100135110'?'.badge[data-badge-id="2"]':'.badge[data-badge-id="t:moderator"]');return{id,color:img&&getComputedStyle(img).backgroundColor};});
+    const rows=['732707575','100135110'].map(id=>{const row=document.querySelector(`[data-id="regression-${id}"]`);const img=row.querySelector('.badge[data-badge-id="t:moderator"]'),bot=row.querySelector('.badge[data-source="ff"][data-badge-id="2"]');return{id,color:img&&getComputedStyle(img).backgroundColor,botColor:bot&&getComputedStyle(bot).backgroundColor};});
     const row=document.querySelector('[data-id="regression-657457116"]'),image=row.querySelector('.badge[data-source="hc"]');
     const profile={badges:[...row.querySelectorAll('.badge')].map(i=>({id:i.dataset.badgeId,source:i.dataset.source,title:i.title,url:i.src}))};
     // Establish one normalized profile, then prove repeated updates retain the image node.
     OverlayRenderer.decorate(row,{}, {cosmeticsProfile:profile});const first=row.querySelector('.badge[data-source="hc"]');OverlayRenderer.decorate(row,{}, {cosmeticsProfile:profile});
     return {rows,preserved:first===row.querySelector('.badge[data-source="hc"]'),version:OverlayApp.getStatus().version};
    });
-   for(const r of checks.rows)assert.equal(r.color,'rgb(52, 174, 10)');assert.ok(checks.preserved);assert.deepEqual(errors,[]);
+   for(const r of checks.rows)assert.equal(r.color,'rgb(52, 174, 10)');assert.equal(checks.rows.find(r=>r.id==='100135110').botColor,'rgb(89, 89, 89)');assert.ok(checks.preserved);assert.deepEqual(errors,[]);
    await page.screenshot({path:path.join(root,'test-results/homies-'+(address.startsWith('file:')?'file':'http')+'.png'),omitBackground:true});results.push({source:address.startsWith('file:')?'file':'http',samples,...checks});await page.close();
   }
  }finally{await browser.close();}

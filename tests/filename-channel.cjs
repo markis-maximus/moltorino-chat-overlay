@@ -12,7 +12,7 @@ const root=path.resolve(__dirname,'..'),out=path.join(root,'test-results','chat-
   await page.goto(pathToFileURL(out).href+'?offline=1');
   const fileState=await page.evaluate(()=>OverlayApp.getStatus());
   assert.equal(fileState.channel,'my_channel');
-  assert.equal(fileState.version,'0.2.6');
+  assert.equal(fileState.version,JSON.parse(fs.readFileSync(path.join(root,'package.json'),'utf8')).version);
   const html=fs.readFileSync(path.join(root,'dist','chat-channelname.html'),'utf8');
   await page.route('http://absolute/**',route=>route.fulfill({contentType:'text/html',body:html}));
   const obsChannels=[];
